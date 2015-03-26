@@ -1,0 +1,78 @@
+label
+{
+  font-size:        12px;
+  font-weight:      bold;
+}
+
+h1
+{
+  color:            rgb(75, 75, 75);
+}
+
+h4
+{
+  color:            rgb(199, 119, 39);
+}
+
+#form_txt
+{
+  border-style:     solid;
+  border-color:     rgb(158, 158, 158);
+  border-width:     1px;
+
+  font-size:        20px;
+  color:            rgb(158, 158, 158);
+}
+
+/*
+#form_btn
+{
+  border-style:     solid;
+  border-width:     0px;
+  border-radius:    5px;
+
+  font-family:      Roboto;
+  font-size:        15px;
+
+  padding:          10px;
+  background-color: rgb(112, 183, 64);
+  color:            white;
+}
+*/
+
+#form_btn:hover
+{
+  background-color: rgb(112, 130, 64);
+}
+
+
+li
+{
+  list-style:           none;
+}
+
+#menu_element
+{
+  padding:              15px;
+  border-radius:        3px;
+}
+
+#menu_element:hover
+{
+  background-color:     rgb(245, 245, 245);
+}
+
+#menu_element a
+{
+  text-decoration:      none;
+  color:                black;
+}
+
+#separateur
+{
+  margin-top:           10px;
+  margin-bottom:        10px;
+  height:               1px;
+  width:                750px;
+  background-color:     black;
+}

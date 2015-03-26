@@ -1,0 +1,12 @@
+@media screen and (max-width: 1024px)
+{
+	#logo-large
+	{
+		display:			none;
+	}
+
+	.logo #logo-min
+	{
+		display:			block;
+	}
+}
