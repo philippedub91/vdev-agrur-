@@ -38,32 +38,49 @@ session_start();
     <?php include('../common/header.php'); ?>
   </header>
 
-  <div class="headline">
-    <h1>Identification</h1>
-  </div>
+  <nav>
+    <div data-role="header">
+      <img id="logo-min" src="../images/logo.png" height="40" align="absmiddle" style="float:left;">
+      <h1>Identification</h1>
+    </div>
+  </nav>
 
-  <div class="content-body">
 
-    <span style="color:red; font-weight:bold;"><?php echo($alert); ?></span>
+  <div class="main-container">
+    <div class="sub-container">
 
-    <form method="POST" action="../src/src_index.php" data-ajax="false">
-      <table>
-        <tr>
-          <td><input type="email" name="txt_mail" id="form_txt" placeholder="Adresse mail"></td>
-        </tr>
-        <tr>
-          <td><input type="password" name="txt_mdp" id="form_txt" placeholder="Mot de passe"></td>
-        </tr>
-        <tr>
-          <td><input type="submit" value="Se connecter" name="btn_valider" id="form_btn"></td>
-        </tr>
-      </table>
-    </form>
+      <h4>Comment se connecter ?</h4>
+      <p>
+        Pour vous connecter veuillez, saisir votre adresse mail, ainsi que votre
+        mot de passe.
+      </p>
 
-    <section>
-      <h4>Comment adhérer à agrur ?</h4>
-      Si vous souhaitez adhérer à AGRUR, contactez nous au : 00.00.00.00.00.
-    </section>
+      <span style="color:red; font-weight:bold;"><?php echo($alert); ?></span>
+
+
+      <form method="POST" action="../src/src_index.php" data-ajax="false">
+        <table>
+          <tr>
+            <td><input type="email" name="txt_mail" id="form_txt" placeholder="Adresse mail"></td>
+          </tr>
+          <tr>
+            <td><input type="password" name="txt_mdp" id="form_txt" placeholder="Mot de passe"></td>
+          </tr>
+          <tr>
+            <td><input type="submit" value="Se connecter" name="btn_valider" id="form_btn"></td>
+          </tr>
+        </table>
+      </form>
+
+      <h4>Travailler avec nous :</h4>
+      <p>
+        Si vous souhaitez travailler avec nous ou obtenir des
+        informations concernant notre coopérative, vous pouvez
+        nous contacter au 00.00.00.00.00.
+      </p>
+
+    </div>
+
   </div>
 </body>
 </html>

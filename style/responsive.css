@@ -1,12 +1,12 @@
-@media screen and (max-width: 1024px)
+@media screen and (max-width: 730px)
 {
-	#logo-large
+	header
 	{
-		display:			none;
+		display:		none;
 	}
 
-	.logo #logo-min
+	#logo-min
 	{
-		display:			block;
+		display:		block;
 	}
 }
