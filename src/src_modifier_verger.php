@@ -11,11 +11,9 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 		{
 			//Sécurise les valeurs
 			$nom_verger = addslashes($_POST['txt_nom_verger']);
-			echo($nom_verger);
 			$superficie = $_POST['txt_superficie'];
-			echo($superficie);
 			$nbr_arbre = addslashes($_POST['sld_nbr_arbres']);
-			echo($nbr_arbre);
+
 
 			//Modifie les valeurs
 			$sql = $connexion->prepare('UPDATE verger SET nom_verger = :nom_verger, superficie = :superficie, nbr_arbre = :nbr_arbre WHERE id_verger = id_verger');

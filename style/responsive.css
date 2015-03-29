@@ -2,11 +2,17 @@
 {
 	header
 	{
+		height:			70px;
+	}
+
+	header #logo-large
+	{
 		display:		none;
 	}
 
-	#logo-min
+	header #logo-min
 	{
+		margin-top:		-10px;
 		display:		block;
 	}
 }

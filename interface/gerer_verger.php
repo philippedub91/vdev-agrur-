@@ -11,6 +11,7 @@ session_start();
   <?php include('../src/bdd_connect.php'); ?>
 
   <?php
+
   //Récupère les informations du verger
   if(isset($_GET['verger']) && is_numeric($_GET['verger']))
   {
@@ -60,7 +61,6 @@ session_start();
 
 
   //Gestion du message d'erreur
-  
   $erreur = '';
 
   if(isset($_GET['msg']))
@@ -87,15 +87,9 @@ session_start();
     <?php include('../common/header.php'); ?>
   </header>
 
-  <nav>
-    <div data-role="navbar">
-      <ul>
-          <li><a href="espace_producteur.php">Accueil</a></li>
-          <li><a href="vergers_producteur.php">Mes vergers</a></li>
-      </ul>
-    </div>
-    
+  <nav>    
     <div data-role="header">
+      <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
       <h1><?php echo($donnees_verger['nom_verger']); ?></h1>
     </div>
   </nav>
@@ -107,9 +101,11 @@ session_start();
         sur cette page.
       </p>
 
+      <!--Affichage d'un message d'erreur-->
       <p style="color:red;">
         <?php echo($erreur); ?>
       </p>
+
       <ul data-role="listview">
         <li><b>Nom : </b><?php echo($donnees_verger['nom_verger']); ?></li>
         <li><b>Superficie : </b><?php echo($donnees_verger['superficie']); ?></li>
@@ -158,6 +154,7 @@ session_start();
           <a href="../src/src_supprimer_verger.php?verger=<?php echo($donnees_verger['id_verger']); ?>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-transition="flow">Supprimer</a>
         </div>
       </div>
+      
     </div>
   </div>
 </body>

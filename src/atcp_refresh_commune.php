@@ -8,14 +8,14 @@ $keyword = '%'.$_POST['keyword'].'%';
 
 //Récupère les communes dont le nom correspond aux valeurs saisis dans $_POST['keyword'];
 $sql = "SELECT * FROM commune WHERE nom_commune LIKE (:keyword) ORDER BY id_commune ASC LIMIT 0, 10";
-$query = $connexion->prepare($sql);
-$query->bindParam(':keyword', $keyword, PDO::PARAM_STR);
+$sql = $connexion->prepare($sql);
+$sql->bindParam(':keyword', $keyword, PDO::PARAM_STR);
 
 //Execute la requete
 try
 {
-	$query->execute();
-	$donnees_commune = $query->fetchAll();
+	$sql->execute();
+	$donnees_commune = $sql->fetchAll();
 	foreach ($donnees_commune as $commune) 
 	{
 		// Met en gras les caractères correspondants à la saisie

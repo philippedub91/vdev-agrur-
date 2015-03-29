@@ -1,23 +1,17 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.2.10
 -- http://www.phpmyadmin.net
 --
--- Client :  127.0.0.1
--- Généré le :  Ven 13 Mars 2015 à 12:12
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
+-- Client :  localhost:8889
+-- Généré le :  Dim 29 Mars 2015 à 13:12
+-- Version du serveur :  5.5.38
+-- Version de PHP :  5.5.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
--- Base de données :  `agrur`
+-- Base de données :  `vdev-agrur`
 --
 
 -- --------------------------------------------------------
@@ -26,11 +20,10 @@ SET time_zone = "+00:00";
 -- Structure de la table `certification`
 --
 
-CREATE TABLE IF NOT EXISTS `certification` (
-  `id_certif` int(11) NOT NULL AUTO_INCREMENT,
-  `libelle_certif` varchar(250) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id_certif`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+CREATE TABLE `certification` (
+`id_certif` int(11) NOT NULL,
+  `libelle_certif` varchar(250) COLLATE utf8_bin NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -38,14 +31,13 @@ CREATE TABLE IF NOT EXISTS `certification` (
 -- Structure de la table `client`
 --
 
-CREATE TABLE IF NOT EXISTS `client` (
-  `num_client` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',
+CREATE TABLE `client` (
+`num_client` int(11) NOT NULL COMMENT 'Clé primaire',
   `nom_client` varchar(250) COLLATE utf8_bin NOT NULL,
   `adresse_client` varchar(250) COLLATE utf8_bin NOT NULL,
   `nom_responsable_achat` varchar(250) COLLATE utf8_bin NOT NULL,
-  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique',
-  UNIQUE KEY `num_client` (`num_client`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique'
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `client`
@@ -60,18 +52,14 @@ INSERT INTO `client` (`num_client`, `nom_client`, `adresse_client`, `nom_respons
 -- Structure de la table `commande`
 --
 
-CREATE TABLE IF NOT EXISTS `commande` (
-  `num_commande` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',
+CREATE TABLE `commande` (
+`num_commande` int(11) NOT NULL COMMENT 'Clé primaire',
   `num_prod` int(11) NOT NULL,
   `num_client` int(11) NOT NULL,
   `id_conditionnement` int(11) NOT NULL,
   `date_commande` date NOT NULL,
-  `quantite` int(11) NOT NULL,
-  PRIMARY KEY (`num_commande`),
-  UNIQUE KEY `id_conditionnement` (`id_conditionnement`),
-  UNIQUE KEY `num_client` (`num_client`),
-  KEY `num_prod` (`num_prod`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+  `quantite` int(11) NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `commande`
@@ -86,12 +74,11 @@ INSERT INTO `commande` (`num_commande`, `num_prod`, `num_client`, `id_conditionn
 -- Structure de la table `commune`
 --
 
-CREATE TABLE IF NOT EXISTS `commune` (
-  `id_commune` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `commune` (
+`id_commune` int(11) NOT NULL,
   `nom_commune` varchar(250) COLLATE utf8_bin NOT NULL,
-  `commune_aoc` int(1) NOT NULL,
-  PRIMARY KEY (`id_commune`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+  `commune_aoc` int(1) NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `commune`
@@ -106,12 +93,10 @@ INSERT INTO `commune` (`id_commune`, `nom_commune`, `commune_aoc`) VALUES
 -- Structure de la table `composer`
 --
 
-CREATE TABLE IF NOT EXISTS `composer` (
+CREATE TABLE `composer` (
   `id_lot` int(11) NOT NULL,
   `id_livraison` int(11) NOT NULL,
-  `quantite` int(11) NOT NULL,
-  UNIQUE KEY `id_lot` (`id_lot`),
-  UNIQUE KEY `id_livraison` (`id_livraison`)
+  `quantite` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -120,14 +105,12 @@ CREATE TABLE IF NOT EXISTS `composer` (
 -- Structure de la table `conditionnement`
 --
 
-CREATE TABLE IF NOT EXISTS `conditionnement` (
-  `id_conditionnement` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `conditionnement` (
+`id_conditionnement` int(11) NOT NULL,
   `libelle_conditionnement` varchar(250) COLLATE utf8_bin NOT NULL,
   `poids_conditionnement` int(11) NOT NULL,
-  `id_lot` int(11) NOT NULL,
-  PRIMARY KEY (`id_conditionnement`),
-  KEY `id_lot` (`id_lot`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=21 ;
+  `id_lot` int(11) NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `conditionnement`
@@ -149,11 +132,10 @@ INSERT INTO `conditionnement` (`id_conditionnement`, `libelle_conditionnement`, 
 -- Structure de la table `gestionnaire`
 --
 
-CREATE TABLE IF NOT EXISTS `gestionnaire` (
-  `num_gestionnaire` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',
-  `token` varchar(255) NOT NULL COMMENT 'Identifiant unique',
-  PRIMARY KEY (`num_gestionnaire`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+CREATE TABLE `gestionnaire` (
+`num_gestionnaire` int(11) NOT NULL COMMENT 'Clé primaire',
+  `token` varchar(255) NOT NULL COMMENT 'Identifiant unique'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `gestionnaire`
@@ -168,12 +150,11 @@ INSERT INTO `gestionnaire` (`num_gestionnaire`, `token`) VALUES
 -- Structure de la table `livraison`
 --
 
-CREATE TABLE IF NOT EXISTS `livraison` (
-  `id_livraison` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `livraison` (
+`id_livraison` int(11) NOT NULL,
   `date_livraison` date NOT NULL,
-  `num_prod` int(11) NOT NULL,
-  PRIMARY KEY (`id_livraison`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `num_prod` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -181,12 +162,11 @@ CREATE TABLE IF NOT EXISTS `livraison` (
 -- Structure de la table `lot_production`
 --
 
-CREATE TABLE IF NOT EXISTS `lot_production` (
+CREATE TABLE `lot_production` (
   `calibre` int(11) NOT NULL,
   `type_produit` varchar(250) COLLATE utf8_bin NOT NULL,
-  `id_lot` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id_lot`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+`id_lot` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -194,12 +174,10 @@ CREATE TABLE IF NOT EXISTS `lot_production` (
 -- Structure de la table `posseder`
 --
 
-CREATE TABLE IF NOT EXISTS `posseder` (
+CREATE TABLE `posseder` (
   `id_certif` int(11) NOT NULL,
   `num_prod` int(11) NOT NULL,
-  `date_obtention` date DEFAULT NULL,
-  UNIQUE KEY `id_certif` (`id_certif`),
-  UNIQUE KEY `num_prod` (`num_prod`)
+  `date_obtention` date DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -208,16 +186,15 @@ CREATE TABLE IF NOT EXISTS `posseder` (
 -- Structure de la table `producteur`
 --
 
-CREATE TABLE IF NOT EXISTS `producteur` (
-  `num_prod` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `producteur` (
+`num_prod` int(11) NOT NULL,
   `adresse_prod` varchar(250) COLLATE utf8_bin NOT NULL,
   `nom_representant_prod` varchar(250) COLLATE utf8_bin NOT NULL,
   `prenom_representant_prod` varchar(250) COLLATE utf8_bin NOT NULL,
   `societe` varchar(250) COLLATE utf8_bin NOT NULL,
   `date_adhesion` date DEFAULT NULL,
-  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique',
-  UNIQUE KEY `num_prod` (`num_prod`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=14 ;
+  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique'
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `producteur`
@@ -232,16 +209,15 @@ INSERT INTO `producteur` (`num_prod`, `adresse_prod`, `nom_representant_prod`, `
 -- Structure de la table `utilisateur`
 --
 
-CREATE TABLE IF NOT EXISTS `utilisateur` (
-  `num` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `utilisateur` (
+`num` int(11) NOT NULL,
   `nom` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Nom de l''utilisateur',
   `prenom` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Prénom de l''utilisateur',
   `mail` varchar(250) COLLATE utf8_bin NOT NULL,
   `mdp` varchar(16) COLLATE utf8_bin NOT NULL,
   `type` int(11) NOT NULL COMMENT 'Type d''utilisateur(1 producteur, 2 client, 3 gestionnaire)',
-  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique de l''utilisateur',
-  PRIMARY KEY (`num`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+  `token` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Identifiant unique de l''utilisateur'
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `utilisateur`
@@ -259,12 +235,11 @@ INSERT INTO `utilisateur` (`num`, `nom`, `prenom`, `mail`, `mdp`, `type`, `token
 -- Structure de la table `variete`
 --
 
-CREATE TABLE IF NOT EXISTS `variete` (
-  `id_variete` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variete` (
+`id_variete` int(11) NOT NULL,
   `libelle_variete` varchar(250) COLLATE utf8_bin NOT NULL,
-  `AOC` int(1) NOT NULL,
-  PRIMARY KEY (`id_variete`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=15 ;
+  `AOC` int(1) NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `variete`
@@ -281,29 +256,172 @@ INSERT INTO `variete` (`id_variete`, `libelle_variete`, `AOC`) VALUES
 -- Structure de la table `verger`
 --
 
-CREATE TABLE IF NOT EXISTS `verger` (
-  `id_verger` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',
+CREATE TABLE `verger` (
+`id_verger` int(11) NOT NULL COMMENT 'Clé primaire',
   `nom_verger` varchar(250) COLLATE utf8_bin NOT NULL,
   `superficie` int(11) NOT NULL,
   `nbr_arbre` int(11) NOT NULL,
   `id_commune` int(11) NOT NULL,
   `num_prod` int(11) NOT NULL,
-  `id_variete` int(11) NOT NULL,
-  PRIMARY KEY (`id_verger`),
-  KEY `id_commune` (`id_commune`),
-  KEY `id_variete` (`id_variete`),
-  KEY `num_prod` (`num_prod`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+  `id_variete` int(11) NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `verger`
 --
 
 INSERT INTO `verger` (`id_verger`, `nom_verger`, `superficie`, `nbr_arbre`, `id_commune`, `num_prod`, `id_variete`) VALUES
-(1, 'Verger du Berger', 45515, 5, 1, 1, 2),
-(2, 'Verger des Ancêtres', 1458, 5, 1, 1, 3),
-(4, 'Verger du clot fleuri', 14587, 15, 1, 1, 1);
+(5, 'Robert', 12345, 50, 1, 1, 1);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `certification`
+--
+ALTER TABLE `certification`
+ ADD PRIMARY KEY (`id_certif`);
+
+--
+-- Index pour la table `client`
+--
+ALTER TABLE `client`
+ ADD UNIQUE KEY `num_client` (`num_client`);
+
+--
+-- Index pour la table `commande`
+--
+ALTER TABLE `commande`
+ ADD PRIMARY KEY (`num_commande`), ADD UNIQUE KEY `id_conditionnement` (`id_conditionnement`), ADD UNIQUE KEY `num_client` (`num_client`), ADD KEY `num_prod` (`num_prod`);
+
+--
+-- Index pour la table `commune`
+--
+ALTER TABLE `commune`
+ ADD PRIMARY KEY (`id_commune`);
+
+--
+-- Index pour la table `composer`
+--
+ALTER TABLE `composer`
+ ADD UNIQUE KEY `id_lot` (`id_lot`), ADD UNIQUE KEY `id_livraison` (`id_livraison`);
+
+--
+-- Index pour la table `conditionnement`
+--
+ALTER TABLE `conditionnement`
+ ADD PRIMARY KEY (`id_conditionnement`), ADD KEY `id_lot` (`id_lot`);
+
+--
+-- Index pour la table `gestionnaire`
+--
+ALTER TABLE `gestionnaire`
+ ADD PRIMARY KEY (`num_gestionnaire`);
+
+--
+-- Index pour la table `livraison`
+--
+ALTER TABLE `livraison`
+ ADD PRIMARY KEY (`id_livraison`);
+
+--
+-- Index pour la table `lot_production`
+--
+ALTER TABLE `lot_production`
+ ADD PRIMARY KEY (`id_lot`);
+
+--
+-- Index pour la table `posseder`
+--
+ALTER TABLE `posseder`
+ ADD UNIQUE KEY `id_certif` (`id_certif`), ADD UNIQUE KEY `num_prod` (`num_prod`);
+
+--
+-- Index pour la table `producteur`
+--
+ALTER TABLE `producteur`
+ ADD UNIQUE KEY `num_prod` (`num_prod`);
+
+--
+-- Index pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+ ADD PRIMARY KEY (`num`);
+
+--
+-- Index pour la table `variete`
+--
+ALTER TABLE `variete`
+ ADD PRIMARY KEY (`id_variete`);
+
+--
+-- Index pour la table `verger`
+--
+ALTER TABLE `verger`
+ ADD PRIMARY KEY (`id_verger`), ADD KEY `id_commune` (`id_commune`), ADD KEY `id_variete` (`id_variete`), ADD KEY `num_prod` (`num_prod`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `certification`
+--
+ALTER TABLE `certification`
+MODIFY `id_certif` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `client`
+--
+ALTER TABLE `client`
+MODIFY `num_client` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `commande`
+--
+ALTER TABLE `commande`
+MODIFY `num_commande` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT pour la table `commune`
+--
+ALTER TABLE `commune`
+MODIFY `id_commune` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `conditionnement`
+--
+ALTER TABLE `conditionnement`
+MODIFY `id_conditionnement` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT pour la table `gestionnaire`
+--
+ALTER TABLE `gestionnaire`
+MODIFY `num_gestionnaire` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `livraison`
+--
+ALTER TABLE `livraison`
+MODIFY `id_livraison` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `lot_production`
+--
+ALTER TABLE `lot_production`
+MODIFY `id_lot` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `producteur`
+--
+ALTER TABLE `producteur`
+MODIFY `num_prod` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+MODIFY `num` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT pour la table `variete`
+--
+ALTER TABLE `variete`
+MODIFY `id_variete` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+--
+-- AUTO_INCREMENT pour la table `verger`
+--
+ALTER TABLE `verger`
+MODIFY `id_verger` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=6;

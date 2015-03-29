@@ -4,7 +4,7 @@ function autocomplet() {
 	var keyword = $('#txt_commune').val();
 	if (keyword.length >= min_length) {
 		$.ajax({
-			url: '../src/ajax_refresh.php',
+			url: '../src/atcp_refresh_commune.php',
 			type: 'POST',
 			data: {keyword:keyword},
 			success:function(data){
