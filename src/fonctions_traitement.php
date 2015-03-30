@@ -64,4 +64,30 @@ function afficherVergerProducteur($num_prod)
 	}
 }
 
+/**
+ * Fonction qui vérifie si le verger dont l'id est donné en paramètre, existe
+ * 
+ * @param int $idVerger : Identifiant du verger dans la base de données.
+ *
+ * @global pdo $connexion : Objet pdo de connexion à la base de données.
+ *
+ * @return boolean $return : TRUE si le verger existe, FALSE si le verger n'existe pas.
+ *
+ */
+function vergerExiste($idVerger)
+{
+	global $connexion;
+	$sql = $connexion->prepare('SELECT count(id_verger) AS compteur FROM verger WHERE id_verger = :id_verger');
+	$sql->bindParam(':id_verger', $idVerger);
+	try
+	{
+		$sql->execute();
+		$donnees_verger = $sql->fetch();
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+}
+
 ?>
