@@ -47,7 +47,7 @@ session_start();
   }
 
   //Récupère le nom de la variété cultivée
-  $sql = $connexion->prepare('SELECT libelle_variete FROM variete WHERE id_variete = id_variete');
+  $sql = $connexion->prepare('SELECT libelle_variete FROM variete WHERE id_variete = :id_variete');
   $sql->bindParam(':id_variete', $donnees_verger['id_variete']);
   try
   {
@@ -112,6 +112,10 @@ session_start();
         <li><b>Arbre /ha : </b><?php echo($donnees_verger['nbr_arbre']); ?></li>
         <li><b>Commune : </b><?php echo($donnees_commune['nom_commune']); ?></li>
         <li><b>Variété cultivée : </b><?php echo($donnees_variete['libelle_variete']); ?></li>
+        <li>
+            <img src="../images/icones/aoc.jpg" height="100" align="absmiddle">
+            Ce verger est certifié AOC !
+        </li>
       </ul>
 
 

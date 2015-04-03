@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Dim 29 Mars 2015 à 13:12
+-- Généré le :  Ven 03 Avril 2015 à 03:03
 -- Version du serveur :  5.5.38
 -- Version de PHP :  5.5.18
 
@@ -13,6 +13,28 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `vdev-agrur`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `calibre_noix`
+--
+
+CREATE TABLE `calibre_noix` (
+`id_calibre` int(11) NOT NULL COMMENT 'Clé primaire',
+  `libelle_calibre` varchar(255) NOT NULL COMMENT 'Libelle du calibre'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `calibre_noix`
+--
+
+INSERT INTO `calibre_noix` (`id_calibre`, `libelle_calibre`) VALUES
+(1, 'inférieur à 24mm'),
+(2, '28 à 30 mm'),
+(3, '30 à 32 mm'),
+(4, '32 à 34 mm'),
+(5, 'supérieur à 34 mm');
 
 -- --------------------------------------------------------
 
@@ -78,14 +100,16 @@ CREATE TABLE `commune` (
 `id_commune` int(11) NOT NULL,
   `nom_commune` varchar(250) COLLATE utf8_bin NOT NULL,
   `commune_aoc` int(1) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `commune`
 --
 
 INSERT INTO `commune` (`id_commune`, `nom_commune`, `commune_aoc`) VALUES
-(1, 'Grenoble', 1);
+(1, 'Grenoble', 1),
+(2, 'Lille', 0),
+(3, 'Mickeyville', 0);
 
 -- --------------------------------------------------------
 
@@ -152,9 +176,21 @@ INSERT INTO `gestionnaire` (`num_gestionnaire`, `token`) VALUES
 
 CREATE TABLE `livraison` (
 `id_livraison` int(11) NOT NULL,
-  `date_livraison` date NOT NULL,
-  `num_prod` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `date_livraison` varchar(250) COLLATE utf8_bin NOT NULL,
+  `num_prod` int(11) NOT NULL,
+  `poids` int(11) NOT NULL COMMENT 'Poids livré',
+  `type` int(11) NOT NULL,
+  `id_verger` int(11) NOT NULL COMMENT 'Identifiant du verger d''origine de la livraison',
+  `traite` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indique si la livraison a été traitée'
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `livraison`
+--
+
+INSERT INTO `livraison` (`id_livraison`, `date_livraison`, `num_prod`, `poids`, `type`, `id_verger`, `traite`) VALUES
+(1, '2015-04-02', 1, 12250, 1, 0, 0),
+(2, '2015-04-02', 1, 12250, 2, 9, 0);
 
 -- --------------------------------------------------------
 
@@ -164,8 +200,10 @@ CREATE TABLE `livraison` (
 
 CREATE TABLE `lot_production` (
   `calibre` int(11) NOT NULL,
-  `type_produit` varchar(250) COLLATE utf8_bin NOT NULL,
-`id_lot` int(11) NOT NULL
+  `type_produit` int(11) NOT NULL,
+  `livraison` int(11) NOT NULL COMMENT 'Identifiant de la livraison',
+`id_lot` int(11) NOT NULL,
+  `poids` int(11) NOT NULL COMMENT 'Poids du lot'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -206,6 +244,25 @@ INSERT INTO `producteur` (`num_prod`, `adresse_prod`, `nom_representant_prod`, `
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `type_produit`
+--
+
+CREATE TABLE `type_produit` (
+`id_type_produit` int(11) NOT NULL COMMENT 'Clé primaire',
+  `libelle_type_produit` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `type_produit`
+--
+
+INSERT INTO `type_produit` (`id_type_produit`, `libelle_type_produit`) VALUES
+(1, 'entière fraiche'),
+(2, 'entière sèche');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `utilisateur`
 --
 
@@ -239,7 +296,7 @@ CREATE TABLE `variete` (
 `id_variete` int(11) NOT NULL,
   `libelle_variete` varchar(250) COLLATE utf8_bin NOT NULL,
   `AOC` int(1) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `variete`
@@ -248,7 +305,8 @@ CREATE TABLE `variete` (
 INSERT INTO `variete` (`id_variete`, `libelle_variete`, `AOC`) VALUES
 (1, 'Franquette', 1),
 (2, 'Mayette', 1),
-(3, 'Parisienne', 1);
+(3, 'Parisienne', 1),
+(15, 'Marnaise', 0);
 
 -- --------------------------------------------------------
 
@@ -264,18 +322,26 @@ CREATE TABLE `verger` (
   `id_commune` int(11) NOT NULL,
   `num_prod` int(11) NOT NULL,
   `id_variete` int(11) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table `verger`
 --
 
 INSERT INTO `verger` (`id_verger`, `nom_verger`, `superficie`, `nbr_arbre`, `id_commune`, `num_prod`, `id_variete`) VALUES
-(5, 'Robert', 12345, 50, 1, 1, 1);
+(5, 'Verger de Topolino', 12345, 50, 1, 1, 1),
+(9, 'Verger Magique', 50, 21, 2, 1, 17),
+(11, 'Verger de Dingo', 30, 10, 1, 1, 18);
 
 --
 -- Index pour les tables exportées
 --
+
+--
+-- Index pour la table `calibre_noix`
+--
+ALTER TABLE `calibre_noix`
+ ADD PRIMARY KEY (`id_calibre`);
 
 --
 -- Index pour la table `certification`
@@ -323,13 +389,13 @@ ALTER TABLE `gestionnaire`
 -- Index pour la table `livraison`
 --
 ALTER TABLE `livraison`
- ADD PRIMARY KEY (`id_livraison`);
+ ADD PRIMARY KEY (`id_livraison`), ADD KEY `id_verger` (`id_verger`), ADD KEY `num_prod` (`num_prod`);
 
 --
 -- Index pour la table `lot_production`
 --
 ALTER TABLE `lot_production`
- ADD PRIMARY KEY (`id_lot`);
+ ADD PRIMARY KEY (`id_lot`), ADD KEY `type_produit` (`type_produit`), ADD KEY `livraison` (`livraison`), ADD KEY `calibre` (`calibre`);
 
 --
 -- Index pour la table `posseder`
@@ -342,6 +408,12 @@ ALTER TABLE `posseder`
 --
 ALTER TABLE `producteur`
  ADD UNIQUE KEY `num_prod` (`num_prod`);
+
+--
+-- Index pour la table `type_produit`
+--
+ALTER TABLE `type_produit`
+ ADD PRIMARY KEY (`id_type_produit`);
 
 --
 -- Index pour la table `utilisateur`
@@ -366,6 +438,11 @@ ALTER TABLE `verger`
 --
 
 --
+-- AUTO_INCREMENT pour la table `calibre_noix`
+--
+ALTER TABLE `calibre_noix`
+MODIFY `id_calibre` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT pour la table `certification`
 --
 ALTER TABLE `certification`
@@ -384,7 +461,7 @@ MODIFY `num_commande` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AU
 -- AUTO_INCREMENT pour la table `commune`
 --
 ALTER TABLE `commune`
-MODIFY `id_commune` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_commune` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `conditionnement`
 --
@@ -399,7 +476,7 @@ MODIFY `num_gestionnaire` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire
 -- AUTO_INCREMENT pour la table `livraison`
 --
 ALTER TABLE `livraison`
-MODIFY `id_livraison` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_livraison` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `lot_production`
 --
@@ -411,6 +488,11 @@ MODIFY `id_lot` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `producteur`
 MODIFY `num_prod` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
+-- AUTO_INCREMENT pour la table `type_produit`
+--
+ALTER TABLE `type_produit`
+MODIFY `id_type_produit` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
@@ -419,9 +501,9 @@ MODIFY `num` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 -- AUTO_INCREMENT pour la table `variete`
 --
 ALTER TABLE `variete`
-MODIFY `id_variete` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `id_variete` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT pour la table `verger`
 --
 ALTER TABLE `verger`
-MODIFY `id_verger` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=6;
+MODIFY `id_verger` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=14;
