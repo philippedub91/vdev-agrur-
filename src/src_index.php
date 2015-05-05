@@ -27,7 +27,7 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 				$_SESSION['token'] = $donnees_utilisateur['token'];
 
 				//Vérifie si l'utilisateur est client
-				$sql = $connexion->prepare('SELECT count(num_client) AS compteur FROM client WHERE token = :token');
+				$sql = $connexion->prepare('SELECT count(num_client) AS compteur, num_client FROM client WHERE token = :token');
 				$sql->bindParam(':token', $donnees_utilisateur['token']);
 				try
 				{
@@ -38,6 +38,7 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 					if($donnees_client['compteur'] == 1)
 					{
 						$_SESSION['type'] = 'client';
+						$_SESSION['num_client'] = $donnees_client['num_client'];
 					}
 					else //Il n'est pas client, on vérifie s'il est producteur
 					{

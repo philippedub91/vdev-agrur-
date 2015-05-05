@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Ven 03 Avril 2015 à 03:03
+-- Généré le :  Ven 10 Avril 2015 à 01:54
 -- Version du serveur :  5.5.38
 -- Version de PHP :  5.5.18
 
@@ -66,7 +66,7 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`num_client`, `nom_client`, `adresse_client`, `nom_responsable_achat`, `token`) VALUES
-(1, '', '15 rue du Berger Gaffeur', 'Michel Pitoulatchi', 'qsdfghjklm');
+(1, 'Bruce Banner', '18 rue du Berger Gaffeur', 'Nick Fury', 'qsdfghjklm');
 
 -- --------------------------------------------------------
 
@@ -75,20 +75,23 @@ INSERT INTO `client` (`num_client`, `nom_client`, `adresse_client`, `nom_respons
 --
 
 CREATE TABLE `commande` (
-`num_commande` int(11) NOT NULL COMMENT 'Clé primaire',
-  `num_prod` int(11) NOT NULL,
-  `num_client` int(11) NOT NULL,
-  `id_conditionnement` int(11) NOT NULL,
-  `date_commande` date NOT NULL,
-  `quantite` int(11) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+`id` int(5) NOT NULL,
+  `prixHt` decimal(10,0) NOT NULL,
+  `conditionnement` varchar(100) NOT NULL,
+  `quantite` int(11) NOT NULL,
+  `dateConditionnement` date NOT NULL,
+  `dateEnvoi` date DEFAULT NULL,
+  `idProduit` int(10) unsigned NOT NULL,
+  `id_distributeur` int(11) NOT NULL,
+  `num_client` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `commande`
 --
 
-INSERT INTO `commande` (`num_commande`, `num_prod`, `num_client`, `id_conditionnement`, `date_commande`, `quantite`) VALUES
-(1, 1, 1, 10, '2015-03-13', 5);
+INSERT INTO `commande` (`id`, `prixHt`, `conditionnement`, `quantite`, `dateConditionnement`, `dateEnvoi`, `idProduit`, `id_distributeur`, `num_client`) VALUES
+(1, 152, '17', 3, '2015-04-03', '2015-04-04', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -181,6 +184,7 @@ CREATE TABLE `livraison` (
   `poids` int(11) NOT NULL COMMENT 'Poids livré',
   `type` int(11) NOT NULL,
   `id_verger` int(11) NOT NULL COMMENT 'Identifiant du verger d''origine de la livraison',
+  `id_variete` int(11) NOT NULL COMMENT 'Identifiant de la variété composant la livraison',
   `traite` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indique si la livraison a été traitée'
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -188,9 +192,9 @@ CREATE TABLE `livraison` (
 -- Contenu de la table `livraison`
 --
 
-INSERT INTO `livraison` (`id_livraison`, `date_livraison`, `num_prod`, `poids`, `type`, `id_verger`, `traite`) VALUES
-(1, '2015-04-02', 1, 12250, 1, 0, 0),
-(2, '2015-04-02', 1, 12250, 2, 9, 0);
+INSERT INTO `livraison` (`id_livraison`, `date_livraison`, `num_prod`, `poids`, `type`, `id_verger`, `id_variete`, `traite`) VALUES
+(1, '2015-04-02', 1, 12250, 1, 1, 1, 0),
+(2, '2015-04-02', 1, 12250, 2, 9, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -200,11 +204,17 @@ INSERT INTO `livraison` (`id_livraison`, `date_livraison`, `num_prod`, `poids`, 
 
 CREATE TABLE `lot_production` (
   `calibre` int(11) NOT NULL,
-  `type_produit` int(11) NOT NULL,
-  `livraison` int(11) NOT NULL COMMENT 'Identifiant de la livraison',
+  `id_livraison` int(11) NOT NULL COMMENT 'Identifiant de la livraison',
 `id_lot` int(11) NOT NULL,
   `poids` int(11) NOT NULL COMMENT 'Poids du lot'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `lot_production`
+--
+
+INSERT INTO `lot_production` (`calibre`, `id_livraison`, `id_lot`, `poids`) VALUES
+(1, 1, 1, 1250);
 
 -- --------------------------------------------------------
 
@@ -359,7 +369,7 @@ ALTER TABLE `client`
 -- Index pour la table `commande`
 --
 ALTER TABLE `commande`
- ADD PRIMARY KEY (`num_commande`), ADD UNIQUE KEY `id_conditionnement` (`id_conditionnement`), ADD UNIQUE KEY `num_client` (`num_client`), ADD KEY `num_prod` (`num_prod`);
+ ADD PRIMARY KEY (`id`), ADD KEY `idProduit` (`idProduit`), ADD KEY `num_client` (`num_client`), ADD KEY `id_distributeur` (`id_distributeur`);
 
 --
 -- Index pour la table `commune`
@@ -389,13 +399,13 @@ ALTER TABLE `gestionnaire`
 -- Index pour la table `livraison`
 --
 ALTER TABLE `livraison`
- ADD PRIMARY KEY (`id_livraison`), ADD KEY `id_verger` (`id_verger`), ADD KEY `num_prod` (`num_prod`);
+ ADD PRIMARY KEY (`id_livraison`), ADD KEY `id_verger` (`id_verger`), ADD KEY `num_prod` (`num_prod`), ADD KEY `id_variete` (`id_variete`);
 
 --
 -- Index pour la table `lot_production`
 --
 ALTER TABLE `lot_production`
- ADD PRIMARY KEY (`id_lot`), ADD KEY `type_produit` (`type_produit`), ADD KEY `livraison` (`livraison`), ADD KEY `calibre` (`calibre`);
+ ADD PRIMARY KEY (`id_lot`), ADD KEY `livraison` (`id_livraison`), ADD KEY `calibre` (`calibre`);
 
 --
 -- Index pour la table `posseder`
@@ -456,7 +466,7 @@ MODIFY `num_client` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO
 -- AUTO_INCREMENT pour la table `commande`
 --
 ALTER TABLE `commande`
-MODIFY `num_commande` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire',AUTO_INCREMENT=3;
+MODIFY `id` int(5) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `commune`
 --
@@ -481,7 +491,7 @@ MODIFY `id_livraison` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT pour la table `lot_production`
 --
 ALTER TABLE `lot_production`
-MODIFY `id_lot` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id_lot` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `producteur`
 --

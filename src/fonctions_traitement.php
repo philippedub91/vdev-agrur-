@@ -2,6 +2,7 @@
 
 /**
  * Fonction qui affiche la liste de tous les vergers sous forme de liste
+ * Cette fonction fait appel à la méthode getNomVerger();
  *
  * @global pdo $connexion  : Objet de connexion à la base de données
  */
@@ -9,7 +10,7 @@ function afficherVerger()
 {
 	global $connexion;
 
-	$sql = $connexion->query('SELECT id_verger nom_verger FROM verger');
+	$sql = $connexion->query('SELECT id_verger, nom_verger FROM verger');
 	try
 	{
 		$sql->execute();
@@ -26,6 +27,8 @@ function afficherVerger()
 	{
 		echo('Erreur : '.$e->getMessage());
 	}
+
+	$sql->closeCursor();
 }
 
 
@@ -60,6 +63,8 @@ function afficherVergerProducteur($num_prod)
 	{
 		echo('Erreur : '.$e->getMessage());
 	}
+
+	$sql->closeCursor();
 }
 
 /**
@@ -91,6 +96,8 @@ function afficherVergerProducteurLst($num_prod)
     {
         echo('Erreur : '.$e->getMessage());
     }
+
+    $sql->closeCursor();
 }
 
 /** 
@@ -118,37 +125,256 @@ function afficherTypeProduitLst()
     {
         echo('Erreur : '.$e->getMessage());
     }
+
+    $sql->closeCursor();
 }
 
 /**
- * Fonction qui retourne le nom du producteur dont l'identifiant est donné en paramètre
+ * Fonction qui affiche tous les producteurs sous forme de liste
+ * Cette fonction utilise également la méthode getIdentiteProducteur()
  *
- * @param int $num_prod : Identifiant du producteur dans la base de données
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
  *
- * @global PDO $connexion : Identifiant de connexion à la base de données
- *
- * @return string $identite_producteur : Nom du producteur
  */
-function getIdentiteProducteur($num_prod)
+function afficherProducteurs()
 {
 	global $connexion;
 
-	$identite_producteur = NULL;
-
-	$sql = $connexion->prepare('SELECT nom, prenom FROM utilisateur U, producteur P WHERE num_prod = :num_prod AND U.token = P.token');
-	$sql->bindParam(':num_prod', $num_prod);
+	$sql = $connexion->query('SELECT num_prod FROM producteur');
 	try
 	{
 		$sql->execute();
-		$donnees_utilisateur = $sql->fetch();
-		$identite_producteur = $donnees_utilisateur['prenom'].' '.$donnees_utilisateur['nom'];
+		while($donnees_producteur = $sql->fetch())
+		{
+		?>
+			<li data-filtertext="<?php echo(getIdentiteProducteur($donnees_producteur['num_prod'])); ?>"><a href="gerer_producteur.php?prod=<?php echo($donnees_producteur['num_prod']); ?>"><?php echo(getIdentiteProducteur($donnees_producteur['num_prod'])); ?></a></li>
+		<?php
+		}
 	}
 	catch(Exception $e)
 	{
 		echo('Erreur : '.$e->getMessage());
 	}
 
+	$sql->closeCursor();
+}
+
+/**
+ * Fonction qui retourne le nom du producteur dont l'identifiant est donné en paramètre
+ * Cette fonction utilise deux autres méthodes : getPrenomProducteur et getNomProducteur.
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @return string $identite_producteur : Nom du producteur
+ */
+function getIdentiteProducteur($num_prod)
+{
+	$identite_producteur = NULL;
+
+	try
+	{
+		$identite_producteur = getPrenomProducteur($num_prod).' '.getNomProducteur($num_prod); 
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+	
 	return $identite_producteur;
+}
+
+/**
+ * Fonction qui retourne l'adresse du producteur dont l'identifiant est donné en paramètre
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @var string $adresse_prod : Contient l'adresse du producteur. Est initialisée à NULL
+ *
+ * @return string $adresse_prod 
+ *
+ */
+function getAdresseProducteur($num_prod)
+{
+	global $connexion;
+
+	$adresse_prod = NULL;
+
+	$sql = $connexion->prepare('SELECT adresse_prod FROM producteur WHERE num_prod = :num_prod');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_producteur = $sql->fetch();
+		$adresse_prod = $donnees_producteur['adresse_prod'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+
+	return  $adresse_prod;
+}
+
+/**
+ * Fonction qui retourne la date d'adhésion du producteur dont l'identifiant est donné en paramètre
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $societe_representante : Chaine contenant la société représentant le producteur
+ *
+ */
+function getDateAdhesionProducteur($num_prod)
+{
+	global $connexion;
+
+	$date_adhesion = NULL;
+
+	$sql = $connexion->prepare('SELECT date_adhesion FROM producteur WHERE num_prod = :num_prod');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_producteur = $sql->fetch();
+		$date_adhesion = $donnees_producteur['date_adhesion'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+
+	return $date_adhesion;
+}
+
+/**
+ * Fonction qui retourne la société représentante du producteur dont l'identifiant est donné en paramètre
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $societe_representante : Chaine contenant le nom de la société représentante
+ *
+ */
+function getSocieteRepresentante($num_prod)
+{
+	global $connexion;
+
+	$societe_representante = NULL;
+
+	$sql = $connexion->prepare('SELECT societe FROM producteur WHERE num_prod = :num_prod');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_producteur = $sql->fetch();
+		$societe_representante = $donnees_producteur['societe'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+
+	return $societe_representante;
+}
+
+function getRepresentantProducteur($num_prod)
+{
+	global $connexion;
+
+	$representant_producteur = NULL;
+
+	$sql = $connexion->prepare('SELECT prenom_representant_prod, nom_representant_prod FROM producteur WHERE num_prod = :num_prod');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_producteur = $sql->fetch();
+		$representant_producteur = $donnees_producteur['prenom_representant_prod'].' '.$donnees_producteur['nom_representant_prod'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+
+	return $representant_producteur;
+}
+
+
+
+/**
+ * Fonction qui retourne le nom d'un producteur dont l'identifiant est donné en paramètre
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $nom_producteur : Nom du producteur
+ *
+ */
+function getNomProducteur($num_prod)
+{
+	global $connexion;
+
+	$nom_producteur = NULL;
+
+	$sql = $connexion->prepare('SELECT nom FROM utilisateur U, producteur P WHERE num_prod = :num_prod AND U.token = P.token');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_utilisateur = $sql->fetch();
+		$nom_producteur = $donnees_utilisateur['nom'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $nom_producteur;
+}
+
+/**
+ * Fonction qui retourne le prenom d'un producteur dont l'identifiant est donné en paramètre
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $prenom_producteur : Prenom du producteur
+ *
+ */
+function getPrenomProducteur($num_prod)
+{
+	global $connexion;
+
+	$prenom_producteur = NULL;
+
+	$sql = $connexion->prepare('SELECT prenom FROM utilisateur U, producteur P WHERE num_prod = :num_prod AND U.token = P.token');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		$donnees_utilisateur = $sql->fetch();
+		$prenom_producteur = $donnees_utilisateur['prenom'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $prenom_producteur;
 }
 
 
@@ -282,6 +508,39 @@ function getIdCommune($nomCommune)
 	return $idCommune;
 }
 
+
+
+/**
+ * Fonction qui retourne le libellé d'un conditionnement dont l'identifiant est donné en paramètre
+ *
+ * @param int $id_conditionnement : Identifiant du conditionnement dont on veut obtenir le nom
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $libelle_conditionnement : Libellé du conditionnement + poids du conditionnement
+ */
+function getLibelleConditionnement($id_conditionnement)
+{
+	global $connexion;
+	
+	$libelle_conditionnement = NULL;
+
+	$sql = $connexion->prepare('SELECT libelle_conditionnement, poids_conditionnement FROM conditionnement WHERE id_conditionnement = :id_conditionnement');
+	$sql->bindParam(':id_conditionnement', $id_conditionnement);
+	try
+	{
+		$sql->execute();
+		$donnees_conditionnement = $sql->fetch();
+		$libelle_conditionnement = $donnees_conditionnement['libelle_conditionnement'].' '.$donnees_conditionnement['poids_conditionnement'].' Kg';
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $libelle_conditionnement;
+}
+
 /**
  * Fonction qui retourne le libelle de la variété dont l'id est donné en paramètre
  *
@@ -344,6 +603,51 @@ function getIdVariete($libelleVariete)
 	}
 
 	return $idVariete;
+}
+
+
+/**
+ * Retourne toutes les informations d'un producteur sous forme de tableau (Array)
+ *
+ * @param int $idProducteur : Identifiant du producteur dont on veut obtenir toutes les informations
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données de l'application
+ *
+ * @return array $donnees_producteur : Tableau contenant toutes les informations d'un producteur
+ *
+ */
+function getProducteur($idProducteur)
+{
+	global $connexion;
+	$donnees_producteur = NULL;
+
+	$sql = $connexion->prepare('SELECT * FROM utilisateur WHERE token = :token');
+    $sql->bindParam(':token', $_SESSION['token']);
+    try 
+    {
+      $sql->execute();
+      $donnees_utilisateur = $sql->fetch();
+
+      //Données producteur
+      $sql = $connexion->prepare('SELECT * FROM producteur WHERE token = :token');
+      $sql->bindParam(':token', $_SESSION['token']);
+      try
+      {
+        $sql->execute();
+        $donnees_producteur = $sql->fetch();
+      }
+      catch(Exception $e)
+      {
+        echo('Erreur : '.$e->getMessage());
+      }
+
+    } 
+    catch (Exception $e) 
+    {
+       echo('Erreur : '.$e->getMessage());
+    } 
+
+    return $donnees_producteur;
 }
 
 /**
@@ -441,6 +745,455 @@ function afficherVarietes()
 		echo('Erreur : '.$e->getMessage());
 	}
 }
+
+/**
+ * Fonction qui affiche la liste des certifications que possède un producteur
+ *
+ * @param int $num_prod : Identifiant du producteur dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function afficherCertificationsProducteur($num_prod)
+{
+	global $connexion;
+
+	$sql = $connexion->prepare('SELECT id_certif, date_obtention FROM posseder WHERE num_prod = :num_prod');
+	$sql->bindParam(':num_prod', $num_prod);
+	try
+	{
+		$sql->execute();
+		while($donnees_certification = $sql->fetch())
+		{
+		?>
+			<li><?php echo('<b>'.getLibelleCertif($donnees_certification['id_certif']).'</b> - Obtenu le : '.$donnees_certification['date_obtention']); ?></li>
+		<?php
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+}
+
+
+/**
+ * Fonction qui permet d'afficher toutes les varietes de noix sous forme de liste déroulante
+ *
+ * @param string $nomListe : Correspont à l'attribut nom en HTML. Permet d'identifier le champ dans un formulaire
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function listeVariete($nomListe)
+{
+	global $connexion;
+
+	echo('<select name="'.$nomListe.'" data-native-menu="false">');
+	$sql = $connexion->query('SELECT id_variete, libelle_variete FROM variete');
+	try
+	{
+		$sql->execute();
+		while($donnees_variete = $sql->fetch())
+		{
+			echo('<option value="'.$donnees_variete['id_variete'].'">'.$donnees_variete['libelle_variete'].'</option>');
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('<option>Une erreur rencontrée</option>');
+	}
+	echo('</select>');
+}
+
+
+/**
+ * Fonction qui permet d'afficher tous types de noix sous forme de liste déroulante
+ *
+ * @param string $nomListe : Correspont à l'attribut nom en HTML. Permet d'identifier le champ dans un formulaire
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function listeType($nomListe)
+{
+	global $connexion;
+
+	echo('<select name="'.$nomListe.'" data-native-menu="false">');
+	$sql = $connexion->query('SELECT id_type_produit, libelle_type_produit FROM type_produit');
+	try
+	{
+		$sql->execute();
+		while($donnees_type = $sql->fetch())
+		{
+			echo('<option value="'.$donnees_type['id_type_produit'].'">'.$donnees_type['libelle_type_produit'].'</option>');
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('<option>Une erreur rencontrée</option>');
+	}
+	echo('</select>');
+}
+
+
+/**
+ * Fonction qui permet d'afficher tous les calibres sous forme de liste déroulante
+ *
+ * @param string $nomListe : Correspont à l'attribut nom en HTML. Permet d'identifier le champ dans un formulaire
+ *
+ * @global PDO $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function listeCalibre($nomListe)
+{
+	global $connexion;
+
+	echo('<select name="'.$nomListe.'" data-native-menu="false">');
+	$sql = $connexion->query('SELECT id_calibre, libelle_calibre FROM calibre_noix');
+	try
+	{
+		$sql->execute();
+		while($donnees_calibre = $sql->fetch())
+		{
+			echo('<option value="'.$donnees_calibre['id_calibre'].'">'.$donnees_calibre['libelle_calibre'].'</option>');
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('<option>Une erreur rencontrée</option>');
+	}
+	echo('</select>');
+}
+
+/**
+ * Fonction qui affiche la liste des conditionnements sous la forme d'une liste à puces
+ * 
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function listeConditionnements()
+{
+	global $connexion;
+
+	 $sql = $connexion->query('SELECT * FROM conditionnement');
+	 try
+	 {
+	 	$sql->execute();
+	 	while($donnees_conditionnement = $sql->fetch())
+	 	{
+	 	?>
+	 		<li><a href="gerer_condi.php?condi=<?php echo($donnees_conditionnement['id_conditionnement']); ?>"><?php echo($donnees_conditionnement['libelle_conditionnement'].' '.$donnees_conditionnement['poids_conditionnement'].' grammes'); ?></a></li>
+	 	<?php
+	 	}
+	 }
+	 catch(Exception $e)
+	 {
+	 	echo('Erreur : '.$e->getMessage());
+	 }
+}
+
+/**
+ * Fonction qui affiche la liste des lots de production dont les caractéristiques
+ * correspondent aux valeurs données en paramètre.
+ *
+ * @param int $id_variete : Identifiant d'une variete dans la base de données
+ *
+ * @param int $id_produit : Identifiant d'un type de produit dans la base de données
+ *
+ * @param int $id_calibre : Identifiant d'un calibre de noix dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function afficherLots($id_variete, $id_produit, $id_calibre)
+{
+	global $connexion; 
+
+	//Création de la balise <ul>
+	echo('<ul data-role="listview" data-inset="true">');
+
+	$sql = $connexion->prepare('SELECT LP.poids AS poids, LP.id_lot as id_lot FROM lot_production LP, livraison L WHERE LP.id_livraison = L.id_livraison AND L.type = :type AND L.id_variete = :id_variete AND LP.calibre = :calibre');
+	$sql->bindParam(':type', $id_produit);
+	$sql->bindParam(':id_variete', $id_variete);
+	$sql->bindParam(':calibre', $id_calibre);
+	try
+	{
+		$sql->execute();
+		while($donnees_lot = $sql->fetch())
+		{
+		?>
+    	<li>
+    		<a href="finaliser_commande_client.php?lot=<?php echo($donnees_lot['id_lot']); ?>"><?php echo("Lot n° : ".$donnees_lot['id_lot']); ?></a>
+  		</li>
+		<?php
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	//Fermeture de la balise ul
+	echo('</ul>');
+}
+
+
+/**
+ * Permet d'afficher la liste des certifications enregistrées dans la base de données
+ * 
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function afficherCertifications()
+{
+	global $connexion;
+
+	$sql = $connexion->query('SELECT id_certif, libelle_certif FROM certification');
+	try
+	{
+		$sql->execute();
+		while($donnees_certification = $sql->fetch())
+		{
+		?>
+			<li>
+				<a href="gerer_certif.php?certif=<?php echo($donnees_certification['id_certif']); ?>"><?php echo($donnees_certification['libelle_certif']); ?></a>
+			</li>
+		<?php
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+}
+
+
+/**
+ * Fonction qui permet d'obtenir le libellé d'une certification
+ *
+ * @param int $certif : Identifiant de la certification dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $libelle_certif : Libelle de la certification
+ */
+function getLibelleCertif($certif)
+{
+	global $connexion;
+
+	$libelle_certif = ''; //Initialise la variable
+
+	$sql = $connexion->prepare('SELECT libelle_certif FROM certification WHERE id_certif = :id_certif');
+	$sql->bindParam(':id_certif', $certif);
+	try
+	{
+		$sql->execute();
+		$donnees_certification = $sql->fetch();
+		$libelle_certif = $donnees_certification['libelle_certif']; 
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $libelle_certif;
+}
+
+/**
+ * Focntion qui retourne le libellé d'un calibre
+ *
+ * @param int $idCalibre : Identifiant du calibre dans la base de données
+ *
+ * @global pdo $connexion : Objet de connexion à la base de données
+ *
+ * @return string $libelleCalibre : Libellé du calibre
+ *
+ */
+function getLibelleCalibre($idCalibre)
+{
+	global $connexion;
+
+	$libelleCalibre = ''; //Initialise la variable
+
+	$sql = $connexion->prepare('SELECT libelle_calibre FROM calibre_noix WHERE id_calibre = :id_calibre');
+	$sql->bindParam(':id_calibre', $idCalibre);
+	try
+	{
+		$sql->execute();
+		$donnees_calibre = $sql->fetch();
+		$libelleCalibre = $donnees_calibre['libelle_calibre']; 
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $libelleCalibre;
+}
+
+
+/**
+ * Fonction qui permet d'obtenir le type de noix d'un lot
+ * 
+ * @param int $id_lot : Idenifiant du lot dans la base de données
+ * 
+ * @global pdo $connexion : objet PDO de connexion à la base de données
+ *
+ * @return string $type : Libellé du type de la noix
+ *
+ */
+function getTypeNoixLot($id_lot)
+{
+	global $connexion;
+
+	$libelle_type = NULL;
+
+	$sql = $connexion->prepare('SELECT libelle_type_produit FROM lot_production LP, livraison L, type_produit TP WHERE LP.id_lot = :id_lot AND LP.id_livraison = L.id_livraison AND TP.id_type_produit = L.type');
+	$sql->bindParam(':id_lot', $id_lot);
+	try
+	{
+		$sql->execute();
+		$donnees_lot = $sql->fetch();
+		$libelle_type = $donnees_lot['libelle_type_produit'];
+	}
+	catch(Exception $e)
+	{
+		$e->getMessage();
+	}
+
+	return $libelle_type; 
+}
+
+/**
+ * Fonction qui retourne le libelle d'une variété de noix d'un lot
+ *
+ * @param int $id_lot : Identifiant du lot dans la base de données
+ *
+ * @global pdo $connexion : objet PDO de connexion à la base de données
+ *
+ * @return string $libelle_variete : Libelle de la variété
+ *
+ */
+function getLibelleVarieteLot($id_lot)
+{
+	global $connexion;
+
+	$libelle_variete = NULL;
+
+	$sql = $connexion->prepare('SELECT libelle_variete FROM lot_production LP, livraison L, variete V WHERE LP.id_lot = :id_lot AND LP.id_livraison = L.id_livraison AND V.id_variete = L.id_variete');
+	$sql->bindParam(':id_lot', $id_lot);
+	try
+	{
+		$sql->execute();
+		$donnees_variete = $sql->fetch();
+		$libelle_variete = $donnees_variete['libelle_variete'];
+	}
+	catch(Exception $e)
+	{
+		$e->getMessage();
+	}
+
+	return $libelle_variete;
+}
+
+/**
+ * Fonction qui calcul le nombre de conditionnements d'un type donné qu'il est
+ * possible de commander pour un lot.
+ * 
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @param int $id_condi : Identifiant du conditionnement dans la base de données
+ *
+ * @param int $id_lot : Identifiant du lot dans la base de données
+ *
+ * @return int $quantite : Quantité de conditionnements possibles du type donnée en paramètre pour le lot donné en paramètre
+ *
+ */
+function getQuantiteCondi($id_condi, $id_lot)
+{
+	global $connexion;
+
+	$poids_conditionnement = NULL;
+	$poids_lot = NULL;
+
+	//Récupère le poids que peut contenir le conditionnement
+	$sql = $connexion->prepare('SELECT poids_conditionnement FROM conditionnement WHERE id_conditionnement = :id_conditionnement');
+	try
+	{
+		$sql->execute();
+		$donnees_conditionnement = $sql->fetch();
+		$poids_conditionnement = $donnees_conditionnement['poids_conditionnement'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	$sql->closeCursor();
+
+	//Récupère la quantité du lot
+	$sql = $connexion->prepare('SELECT poids FROM lot_production WHERE id_lot = :id_lot');
+	$sql->bindParam(':id_lot', $id_lot);
+	try
+	{
+		$sql->execute();
+		$donnees_conditionnement = $sql->fetch();
+		$poids_lot = $donnees_conditionnement['poids'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	//Convertion du poids du conditionnement en kg
+	$poids_conditionnement = $poids_conditionnement * 0.001;
+	echo('poids conditionnement : '.$poids_conditionnement);
+	
+	//Calcul de la quantité possible
+	$quantite = $poids_lot / $poids_conditionnement;
+
+
+	return $quantite;
+}
+
+/**
+ * Fonction qui récupère le poids d'un lot de production
+ *
+ * @param int $id_lot : Identifiant du lot dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return int $poids : Poids du lot
+ *
+ */
+function getPoidsLot($id_lot)
+{
+  global $connexion;
+
+  $poids = NULL;
+
+  $sql = $connexion->prepare('SELECT poids FROM lot_production WHERE id_lot = :id_lot');
+  $sql->bindParam(':id_lot', $_GET['lot']);
+  try
+  {
+    $sql->execute();
+    $donnees_lot = $sql->fetch();
+    $poids = $donnees_lot['poids'];
+  }
+  catch(Exception $e)
+  {
+    echo('Erreur : '.$e->getMessage());
+  }
+
+  return $poids;
+}
+
+
 
 /**
  * Fonction qui permet de savoir si un verger est AOC

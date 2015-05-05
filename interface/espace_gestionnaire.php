@@ -6,7 +6,7 @@ session_start();
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>Espace producteur</title>
+  <title>Espace gestionnaire</title>
   <?php include('../common/head.php'); ?>
 </head>
 
@@ -17,7 +17,7 @@ session_start();
 
   <div data-role="header">
     <img id="logo-min" src="../images/logo.png" height="40" align="absmiddle" style="float:left;">
-    <h1>Espace producteur</h1>
+    <h1>Espace gestionnaire</h1>
   </div>
 
   <div class="main-container">
@@ -28,12 +28,15 @@ session_start();
         <a href="producteurs.php" class="ui-btn ui-corner-all"><img src="../images/icones/producteur.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style:"float:middle;">Producteurs</span></a>
         <a href="livraison_gestionnaire.php" class="ui-btn ui-corner-all"><img src="../images/icones/truck.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Livraisons et lots</span></a>
         <a href="varietes.php" class="ui-btn ui-corner-all"><img src="../images/icones/varietes.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle;">Varietes</span></a>
-        <a href="vergers.php" class="ui-btn ui-corner-all"><img src="../images/icones/verger.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Vergers</span></a>
+        <a href="vergers_gestionnaire.php" class="ui-btn ui-corner-all"><img src="../images/icones/verger.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Vergers</span></a>
         <a href="communes.php" class="ui-btn ui-corner-all"><img src="../images/icones/map.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Communes</span></a>
         <a href="conditionnements.php" class="ui-btn ui-corner-all"><img src="../images/icones/package.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Conditionnements</span></a>
+        <a href="certifications.php" class="ui-btn ui-corner-all"><img src="../images/icones/certificat.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Certifications</span></a>
         <a href="../src/session_destroy.php" class="ui-btn ui-corner-all"><img src="../images/icones/deconnexion.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle;">Déconnexion</span></a>
       </div>
     </div>
   </div>
 </body>
+
+
 </html>

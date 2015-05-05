@@ -16,69 +16,40 @@ session_start();
     <?php include('../common/header.php'); ?>
   </header>
 
-  <div class="headline">
+  <div data-role="header">
+    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
     <h1>Conditionnements</h1>
-    <a href="espace_gestionnaire.php"><img src="../images/icones/home.png" height="30" align="absmiddle" > Accueil</a></a>
   </div>
 
-  <div class="content-body">
-      <div class="panel">
-        <form method="POST" action="../src/src_conditionnements.php">
-          <table class="tableau_gestion" style="width:750px;">
-            <tr>
-              <th>N°</th>
-              <th>Libellé</th>
-              <th>Modifier/Infos</th>
-              <th>Supprimer</th>
-            </tr>
+  <div class="main-container">
+      <div class="sub-container">
+        <p>
+          Voici la liste des conditionnements. Vous pouvez en ajouter
+          <a href="#popupAjouter" data-rel="popup" data-position-to="window" data-transition="pop">en cliquant ici</a>.
+        </p>
+          
+        <ul data-role="listview" data-inset="true">
+          <?php listeConditionnements(); ?>
+        </ul>
 
-            <?php
-            $num_conditionnement = 1; //Numéro d'affichage de la variété
-              
-            //Récupération des variétés
-            $sql = $connexion->query('SELECT * FROM conditionnement GROUP BY libelle_conditionnement');
-            while($donnees_conditionnement = $sql->fetch())
-            {
-              //Si nombre impaire fond sombre, sinon fond clair
-              if($num_conditionnement % 2 == 1)
-              {
-                echo('<tr style="background-color:rgb(102, 102, 102); color:white; text-align:center;">');
-              }
-              else
-              {
-                echo('<tr style="background-color:rgb(210, 210, 210); text-align:center;">');
-              }
-              ?>
-                <td><?php echo($num_conditionnement); ?></td>
-                <td><?php echo($donnees_conditionnement['libelle_conditionnement']); ?></td>
-                <td><a href="options_conditionnement.php?conditionnement=<?php echo($donnees_conditionnement['libelle_conditionnement']); ?>">Cliquer ici</a></td>
-                <td><input type="checkbox" name="ckb_supprimer[]" value="<?php echo($donnees_conditionnement['libelle_conditionnement']); ?>"></td>
-              </tr>
-              <?php
-              $num_conditionnement++;
-            }
-            ?>
-            </table>
+        <!--Fenêtre modale d'ajout de conditionnement-->
+        <div data-role="popup" id="popupAjouter" data-theme="c" class="ui-corner-all">
+          <div data-role="header" data-theme="c">
+            <h1>Ajouter un conditionnement</h1>
+          </div>
+          <div role="main" class="ui-content">
+            <form method="POST" action="../src/src_conditionnements.php" data-ajax="false">
+              <label for="txt_conditionnement">Libellé :</label>
+              <input type="text" name="txt_conditionnement" placeholder!"ex: Filet">
 
-            <hr>
+              <label for="txt_poids">Poids</label>
+              <input type="text" name="txt_poids" placeholder!"ex: 1000g">
+            
+              <input type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" value="Ajouter">
+            </form>
+          </div>
 
-            <h4>Ajouter un conditionnement</h4>
-
-            <table>
-              <tr>
-                <td><label for="txt_conditionnement">Libellé : </label></td>
-                <td><input type="text" name="txt_conditionnement" placeholder="ex: Filet"></td>
-              </tr>
-              <tr>
-                <td><label for="txt_poids">Poids (séparés par une virgule) :</label></td>
-                <td><input type="text" name="txt_poids" placeholder="ex:1000g, 10000g"></td>
-              </tr>
-            </table>
-
-            <hr>
-
-            <input type="submit" value="Enregistrer les modifications" id="form_btn" style="float:right;">
-          </form>
+        </div>
       </div>
   </div>
 </body>

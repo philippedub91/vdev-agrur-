@@ -24,7 +24,7 @@ if(isset($_GET['msg']))
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>Mes vergers</title>
+  <title>Les vergers</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
 </head>
@@ -41,17 +41,16 @@ if(isset($_GET['msg']))
     
     <div data-role="header">
       <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
-      <h1>Mes vergers</h1>
+      <h1>Les vergers</h1>
     </div>
   </nav>
 
   <div class="main-container">
     <div class="sub-container">
       <p>
-        Voici la liste de tous vos vergers enregistrés.
-        Cliquez sur un verger pour afficher plus d'informations 
-        et d'options. Vous pouvez également
-        <a href="ajout_verger.php">ajouter des vergers</a>.
+      	Voici la liste de tous les vergers actuellement en lien avec
+      	AGRUR. Si vous souhaitez obtenir plus d'informations concernant un
+      	de ces vergers, cliquez dessus.
       </p>
 
       <!--Affiche la liste des vergers du producteur-->
@@ -59,7 +58,7 @@ if(isset($_GET['msg']))
         <?php 
 
           //Fonction qui permet d'afficher la liste de tous les vergers du producteur
-          afficherVergerProducteur($_SESSION['num_prod']); 
+          afficherVerger(); 
 
         ?>
       </ul>

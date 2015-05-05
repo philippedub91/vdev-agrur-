@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+//Vérifie si l'identifiant de la livraison n'est pas dans une variable d'adresse
+if(!isset($_GET['livraison']))
+{
+  //Redirection vers la liste des livraisons
+  header('location: livraison_gestionnaire.php');
+}
+
 //Gestion des messages d'erreur :
 $message = ''; //Initialise message
 
@@ -14,7 +21,7 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>Créer des lots</title>
+  <title>Créer un lot</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
 </head>
@@ -26,15 +33,16 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
 
   <div data-role="header">
     <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
-    <h1>Créer des lots</h1>
+    <h1>Créer un lot</h1>
   </div>
 
   <div class="main-container">
     <div class="sub-container">
 
       <p>
-        Pour créer des lots, veuillez remplir le formulaire ci-dessous. Chaque lot correspond à 
-        un calibre.
+        Pour créer un lot à partir de cette commande, sélectionnez
+        un calibre, puis la quantité de noix de ce calibre contenue 
+        dans la livraison.
       </p>
 
       <div class="ui-corner-all custom-corners">
@@ -42,15 +50,20 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
           <h3>Création du lot</h3>
         </div>
         <div class="ui-body ui-body-c">
-          <h3><?php echo('12250kg'); ?></h3>
-          <form method="POST" action="src/src_creer_lot.php">
-            <label for="ckb_calibre_1">Calibre 1 :</label>
-            <input type="range" name="slider-1" id="slider-1" min="0" max="100" value="50">
+          <form method="POST" action="../src/src_creer_lot.php" data-ajax="false">
+            <label>Calibre :</label>
+            <?php listeCalibre('lst_calibre'); //Fonction qui crée une liste de noix ?>
+
+            <label for="sld_quantite">Quantité :</label>
+            <input type="range" name="sld_quantite" value="60" min="0" max="1000" step="50" data-highlight="true">
+
+            <input type="hidden" name="hd_livraison" value="<?php echo($_GET['livraison']); ?>">
+          
+            <input type="submit" class="ui-btn ui-shadow" value="Créer le lot">
           </form>
         </div>
       </div>
-      <form method="POST" action="src/src_creer_lot.php">
-      </form>
+
     </div>
   </div>
 </body>

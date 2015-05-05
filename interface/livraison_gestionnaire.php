@@ -33,12 +33,13 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
     <div class="sub-container">
 
       <p>
-        Voici la liste des dernière livraisons non traitées. Cliquez sur une 
-        de ces livraisons pour créer un lot.
+        Voici la liste des livraisons. Cliquez sur le bouton "Créer un lot" pour créer des lots.
+        Le bouton "Voir les lots de cette livraison" vous permet de voir la liste des lots de production
+        créés à partir de cette livraison.
       </p>
 
       <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
-        <li data-role="list-divider">Livraisons non traitées</li>
+        <li data-role="list-divider">Livraisons</li>
         <?php
         $sql = $connexion->query('SELECT * FROM livraison WHERE traite = 0');
         $sql->bindParam(':num_prod', $_SESSION['num_prod']);
@@ -71,7 +72,8 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
                   <td><?php echo(getIdentiteProducteur($donnees_livraison['num_prod'])); ?></td>
                 </tr>
                 <tr>
-                  <td><a href="creer_lot_gestionnaire.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Créer un lot</a></td>
+                  <td><a href="creer_lot_gestionnaire.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Créer des lots</a></td>
+                  <td><a href="liste_lot_livraison.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Voir les lots de cette livraison</a></td>
                 </tr>
               </table>
             </li>

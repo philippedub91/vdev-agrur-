@@ -5,13 +5,17 @@ session_start();
 include('bdd_connect.php'); //Connexion à la base de données
 
 
-//Suppression des conditionnements sélectionnés
-if(isset($_POST['ckb_supprimer']))
+//Ajout d'un conditionnement
+if(isset($_POST['txt_conditionnement']) && !empty($_POST['txt_conditionnement']))
 {
-	foreach($_POST['ckb_supprimer'] as $supprimer)
+	if(isset($_POST['txt_poids']) && !empty($_POST['txt_poids']) && is_numeric($_POST['txt_poids']))
 	{
-		$sql = $connexion->prepare('DELETE FROM conditionnement WHERE libelle_conditionnement = :libelle_conditionnement');
-		$sql->bindParam(':libelle_conditionnement', $supprimer);
+		$libelle = addslashes($_POST['txt_conditionnement']);
+		$poids = $_POST['txt_poids'];
+
+		$sql = $connexion->prepare('INSERT INTO conditionnement(libelle_conditionnement, poids_conditionnement) VALUES(:libelle_conditionnement, :poids_conditionnement)');
+		$sql->bindParam(':libelle_conditionnement', $libelle);
+		$sql->bindParam(':poids_conditionnement', $poids);
 		try
 		{
 			$sql->execute();
@@ -21,36 +25,24 @@ if(isset($_POST['ckb_supprimer']))
 			echo('Erreur : '.$e->getMessage());
 		}
 	}
-}
-
-
-//Ajout d'un conditionnement
-if(isset($_POST['txt_conditionnement']) && !empty($_POST['txt_conditionnement']))
-{
-	if(isset($_POST['txt_poids']) && !empty($_POST['txt_poids']))
+	else
 	{
-		$libelle = addslashes($_POST['txt_conditionnement']);
-
-		//Crée un tableau contenant tous les poids saisis
-		$poids = explode(',', $_POST['txt_poids']); 
-
-		//Ajout du conditionnement dans la base de données
-		foreach($poids as $unPoids)
-		{
-			$sql = $connexion->prepare('INSERT INTO conditionnement(libelle_conditionnement, poids_conditionnement) VALUES(:libelle_conditionnement, :poids_conditionnement)');
-			$sql->bindParam(':libelle_conditionnement', $libelle);
-			$sql->bindParam(':poids_conditionnement', $unPoids);
-			try
-			{
-				$sql->execute();
-			}
-			catch(Exception $e)
-			{
-				echo('Erreur : '.$e->getMessage());
-			}
-		}
+		$erreur = 1;
 	}
 }
+else
+{
+	$erreur = 1;
+}
 
-header('location: ../interface/conditionnements.php');
+
+//Redirige vers l'interface
+if(isset($erreur)) //Une erreur de saisie a été rencontrée
+{
+	header('location: ../interface/conditionnements.php?msg='.$erreur);
+}
+else
+{
+	header('location: ../interface/conditionnements.php');
+}
 ?>

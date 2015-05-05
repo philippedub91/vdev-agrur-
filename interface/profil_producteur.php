@@ -41,115 +41,99 @@ if(isset($_GET['msg']))
     <?php include('../common/header.php'); ?>
   </header>
 
-  <div class="headline">
-    <h1>Mon profil</h1>
-    <div class="ui-input-btn ui-btn ui-corner-all ui-shadow" style="width:100px;">
-      <a href="espace_producteur.php"><img src="../images/icones/home.png" height="30" align="absmiddle"> Accueil</a>
-    </div>
+  <div data-role="header">
+    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
+    <h1>Modifier mon prodil producteur</h1>
   </div>
 
-  <div class="content-body">
-      <div class="panel">
+  <div class="main-container">
+      <div class="sub-container">
         <!--Affichage de la variable contenant le message d'erreur-->
         <span style="color:red;"><?php echo($msg_erreur); ?></span>
 
-        <p>Ici, vous pouvez modifier votre profil personnel.</p>
+        <p>
+          Ici, vous pouvez gérer votre profil producteur et modifier vote mot
+          de passe.
+        </p>
 
-        <?php
-        //Récupère toutes les informations du producteur
-        //Données utilisateur
-        $sql = $connexion->prepare('SELECT * FROM utilisateur WHERE token = :token');
-        $sql->bindParam(':token', $_SESSION['token']);
-        try 
-        {
-          $sql->execute();
-          $donnees_utilisateur = $sql->fetch();
+        <form method="POST" action="../src/src_profil_producteur.php" data-ajax="false">
 
-          //Données producteur
-          $sql = $connexion->prepare('SELECT * FROM producteur WHERE token = :token');
-          $sql->bindParam(':token', $_SESSION['token']);
-          try
-          {
-            $sql->execute();
-            $donnees_producteur = $sql->fetch();
-          }
-          catch(Exception $e)
-          {
-            echo('Erreur : '.$e->getMessage());
-          }
+          <?php $donnees_producteur = getProducteur($_SESSION['num_prod']); //Retourne les information du producteur ?>
 
-        } 
-        catch (Exception $e) 
-        {
-           echo('Erreur : '.$e->getMessage());
-        } 
-        ?>
+          <!--Modifier les informations relatives à l'identité-->
+          <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-c">
+              <h3>Votre identité : </h3>
+            </div>
+            <div class="ui-body ui-body-c">
+              <div class="ui-field-contain">  
+                <label for="txt_nom">Nom :</label>
+                <input type="text" name="txt_nom" disabled value="<?php echo(getNomProducteur($_SESSION['num_prod'])); ?>">
+              </div>
 
-        <form method="POST" action="../src/src_profil_producteur.php">
-          <h4>Vos informations : </h4>
+              <div class="ui-field-contain">
+                <label for="txt_prenom">Prenom :</label>
+                <input type="text" name="txt_prenom" disabled value="<?php echo(getPrenomProducteur($_SESSION['num_prod'])); ?>">
+              </div>
 
-          <table>
-            <tr>
-              <td><label for="txt_nom">Nom :</label></td>
-              <td><input type="text" name="txt_nom" disabled value="<?php echo($donnees_utilisateur['nom']); ?>"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_prenom">Prenom :</label></td>
-              <td><input type="text" name="txt_prenom" disabled value="<?php echo($donnees_utilisateur['prenom']); ?>"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_adresse_prod">Adresse :</label></td>
-              <td><input type="text" name="txt_adresse_prod" value="<?php echo($donnees_producteur['adresse_prod']); ?>"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_date_adhesion">Date d'adhésion :</label></td>
-              <td><input type="text" name="txt_date_adhesion" disabled value="<?php echo($donnees_producteur['date_adhesion']); ?>"></td>
-            </tr>
-          </table>
+              <div class="ui-field-contain">
+                <label for="txt_adresse_prod">Adresse :</label>
+                <input type="text" name="txt_adresse_prod" value="<?php echo($donnees_producteur['adresse_prod']); ?>">
+              </div>
 
-          <hr>
+              <div class="ui-field-contain">
+                <label for="txt_data_adhesion">Date d'adhésion :</label>
+                <input type="text" name="txt_date_adhesion" disabled value="<?php echo($donnees_producteur['date_adhesion']); ?>">
+              </div>
+            </div>
+          </div>
 
-          <h4>Modifier votre mot de passe</h4>
+          <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-c">
+              <h3>Votre mot de passe :</h3>
+            </div>
+            <div class="ui-body ui-body-c">
+              <div class="ui-field-contain">  
+                <label for="txt_mdp">Mot de passe :</label>
+                <input type="password" name="txt_mdp" placeholder="Nouveau mot de passe">
+              </div>
 
-          <table>
-            <tr>
-              <td><label for="txt_mdp">Mot de passe :</label></td>
-              <td><input type="password" name="txt_mdp" placeholder="Nouveau mot de passe"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_nMdp">Confirmer :</label></td>
-              <td><input type="password" name="txt_nMdp" placeholder="Retapez votre mot de passe"></td>
-            </tr>
-          </table>
+              <div class="ui-field-contain">
+                <label for="txt_nMdp">Confirmer :</label>
+                <input type="password" name="txt_nMdp" placeholder="Retapez votre nouveau mot de passe">
+              </div>
+            </div>
+          </div>
 
-          <hr>
+          <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-c">
+              <h3>Votre représentant :</h3>
+            </div>
+            <div class="ui-body ui-body-c">
+              <div class="ui-field-contain">  
+                <label for="txt_nom_representant">Nom :</label>
+                <input type="text" name="txt_nom_representant" value="<?php echo($donnees_producteur['nom_representant_prod']); ?>">
+              </div>
 
-          <h4>Votre représentant :</h4>
+              <div class="ui-field-contain">
+                <label for="txt_prenom_representant">Prénom :</label>
+                <input type="text" name="txt_prenom_representant" value="<?php echo($donnees_producteur['prenom_representant_prod']); ?>">
+              </div>
 
-          <table>
-            <tr>
-              <td><label for="txt_nom_representant">Nom :</label></td>
-              <td><input type="text" name="txt_nom_representant" value="<?php echo($donnees_producteur['nom_representant_prod']); ?>"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_prenom_representant">Prenom :</label></td>
-              <td><input type="text" name="txt_prenom_representant" value="<?php echo($donnees_producteur['prenom_representant_prod']); ?>"></td>
-            </tr>
-            <tr>
-              <td><label for="txt_societe">Société :</label></td>
-              <td><input type="text" name="txt_societe" value="<?php echo($donnees_producteur['societe']); ?>"></td>
-            </tr>
-          </table>
+              <div class="ui-field-contain">
+                <label for="txt_societe">Société :</label>
+                <input type="text" name="txt_societe" value="<?php echo($donnees_producteur['societe']); ?>">
+            </div>
+          </div>
 
-          <hr>
-
-          <input type="submit" style="float:right;" id="form_btn" value="Enregistrer les modifications">
-
-          <p>
-            Après avoir enregistré vos informations, vous pouvez gérer vos vergers 
-            <a href="vergers_producteur.php">dans la rubrique dédiée</a>
-          </p>
-
+          <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-c">
+              <h3>Valider les informations</h3>
+            </div>
+            <div class="ui-body ui-body-c">
+              <input type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b" value="Enregistrer les modifications">
+            </div>
+          </div>
         </form>
       </div>
   </div>

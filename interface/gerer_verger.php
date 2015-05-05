@@ -112,15 +112,20 @@ session_start();
         <li><b>Arbre /ha : </b><?php echo($donnees_verger['nbr_arbre']); ?></li>
         <li><b>Commune : </b><?php echo($donnees_commune['nom_commune']); ?></li>
         <li><b>Variété cultivée : </b><?php echo($donnees_variete['libelle_variete']); ?></li>
-        <li>
-            <img src="../images/icones/aoc.jpg" height="100" align="absmiddle">
-            Ce verger est certifié AOC !
-        </li>
       </ul>
 
+      <!--Boutons permettant d'afficher les fenêtres modales-->
+      <?php
+      if(isset($_SESSION['num_prod']))
+      {
+      ?>
+        <a href="#popupModifier" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-b">Modifier</a>
+        <a href="#popupSupprimer" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">Supprimer le verger</a>
+      <?php
+      }
+      ?>
 
       <!--Fenêtre permettant de modifier les informations du verger-->
-      <a href="#popupModifier" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-b">Modifier</a>
       <div data-role="popup" id="popupModifier" data-overlay-theme="b" data-theme="c" data-dismissible="false" style="min-width:300px; max-width:400px;">
         <div data-role="header" data-theme="c">
           <h1>Modifier</h1>
@@ -146,7 +151,6 @@ session_start();
       </div>
 
       <!--Fenêtre permettant de supprimer le verger-->
-      <a href="#popupSupprimer" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">Supprimer le verger</a>
       <div data-role="popup" id="popupSupprimer" data-overlay-theme="b" data-theme="c" data-dismissible="false" style="max-width:400px;">
         <div data-role="header" data-theme="c">
           <h1>Confirmation</h1>
