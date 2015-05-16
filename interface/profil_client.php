@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
+
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
@@ -30,19 +35,10 @@ catch(Exception $e)
 
 
 //Gestion des messages d'erreur
-$msg_erreur = '';
+$message = '';
 if(isset($_GET['msg']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $msg_erreur = 'Certains champs sont vide ou ne sont pas saisis correctement. Veuillez recommancer votre saisie.';
-    break;
-    case 2:
-      $msg_erreur = 'Les deux mot passe saisis sont différents.';
-    default:
-    break;
-  }
+  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -71,7 +67,8 @@ if(isset($_GET['msg']))
           de passe.
       </p>
 
-     <p style="color:red; font-weight:bold;"><?php echo($msg_erreur) ?></p>
+     <!--Affichage du message d'erreur ou de succès-->
+     <?php echo($message); ?>
 
       <form method="POST" action="../src/src_profil_client.php" data-ajax="false">
         <div class="ui-corner-all custom-corners">

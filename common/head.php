@@ -26,4 +26,3 @@
 
 <!--Fonctions php-->
 <?php //include('../src/fonctions_affichage.php'); ?>
-<?php include('../src/fonctions_traitement.php'); ?>

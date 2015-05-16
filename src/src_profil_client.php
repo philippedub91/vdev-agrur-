@@ -59,28 +59,28 @@ if(isset($_POST['txt_nom_client']) && !empty($_POST['txt_nom_client']))
 					}
 					else
 					{
-						$erreur = 2;
+						$erreur = 'e10';
 					}
 				}
 				else
 				{
-					$erreur = 2;
+					$erreur = 'e11';
 				}
 			}
 		}
 		else
 		{
-			$erreur = 1;
+			$erreur = 'e1';
 		}
 	}
 	else
 	{
-		$erreur = 1;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 
@@ -93,5 +93,5 @@ if(isset($erreur))
 }
 else
 {
-	header('location: ../interface/profil_client.php');
+	header('location: ../interface/profil_client.php?msg=s1');
 }

@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
 ?>
 
 
@@ -65,19 +68,7 @@ session_start();
 
   if(isset($_GET['msg']))
   {
-    switch($_GET['msg'])
-    {
-      case 1:
-        $erreur = 'Modification non réalisée. Le nom n\'est pas correctement saisi.';
-      break;
-      case 2:
-        $erreur = 'Modification non réalisée. La superficie saisie n\'est pas conforme';
-      break;
-      case 3:
-        $erreur = 'Modification non réalisée. Le nombre d\'arbres n\'est pas ou mal saisi';
-      default:
-      break;
-    }
+    $message = affiMessage($_GET['msg']));
   }
   ?>
 </head>
@@ -101,10 +92,9 @@ session_start();
         sur cette page.
       </p>
 
-      <!--Affichage d'un message d'erreur-->
-      <p style="color:red;">
-        <?php echo($erreur); ?>
-      </p>
+      <!--Affichage d'un message d'erreur ou de succès-->
+      <?php echo($message); ?>
+
 
       <ul data-role="listview">
         <li><b>Nom : </b><?php echo($donnees_verger['nom_verger']); ?></li>
@@ -113,6 +103,19 @@ session_start();
         <li><b>Commune : </b><?php echo($donnees_commune['nom_commune']); ?></li>
         <li><b>Variété cultivée : </b><?php echo($donnees_variete['libelle_variete']); ?></li>
       </ul>
+
+      <!--Bloc qui s'affiche si le verger possède le label aoc-->
+      <?php
+      if(estAOC($_GET['verger']))
+      {
+      ?>
+        <p>
+          <img src="../images/icones/aoc.jpg" height="50" align="absmiddle">
+          Ce verger possède le label AOC.
+        </p>
+      <?php
+      }
+      ?>
 
       <!--Boutons permettant d'afficher les fenêtres modales-->
       <?php

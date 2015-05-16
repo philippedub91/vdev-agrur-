@@ -1,12 +1,17 @@
 <?php
 session_start();
 
-//Gestion des messages d'erreur :
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
+//Gestion des messages d'erreur ou de succès:
 $message = ''; //Initialise message
 
-if(isset($_GET['msg']) && $_GET['msg'] == 1 )
+if(isset($_GET['msg']))
 {
-  $message = 'Un ou plusieurs champs n\'ont pas été saisis correctement.'; 
+  $message = affiMessage($_GET['msg']); 
 } 
 ?>
 
@@ -37,6 +42,9 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
         Le bouton "Voir les lots de cette livraison" vous permet de voir la liste des lots de production
         créés à partir de cette livraison.
       </p>
+
+      <!--Affichage du message d'erreur ou de succès-->
+      <?php echo($message); ?>
 
       <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
         <li data-role="list-divider">Livraisons</li>
@@ -73,7 +81,9 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
                 </tr>
                 <tr>
                   <td><a href="creer_lot_gestionnaire.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Créer des lots</a></td>
+                  <?php //condition ?>
                   <td><a href="liste_lot_livraison.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Voir les lots de cette livraison</a></td>
+                  <td><a href="#" class="ui-btn ui-corner-all"><img src="../images/icones/pdf.png" title="Editer un PDF" height="50"></a></td>
                 </tr>
               </table>
             </li>

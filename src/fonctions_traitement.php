@@ -130,6 +130,82 @@ function afficherTypeProduitLst()
 }
 
 /**
+ * Fonction qui affiche tous les clients sous forme de liste
+ * Cette fonction utilise également la méthode getIdentiteClient()
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function afficherClients()
+{
+	global $connexion;
+
+	$sql = $connexion->query('SELECT num_client, token FROM client');
+	try
+	{
+		$sql->execute();
+		while($donnees_client = $sql->fetch())
+		{
+		?>
+			<li data-filtertext="<?php echo(getIdentiteClient($donnees_client['token'])); ?>"><a href="gerer_client.php?client=<?php echo($donnees_client['num_client']); ?>"><?php echo(getIdentiteClient($donnees_client['token'])); ?></a></li>
+		<?php
+		}
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	if(isset($sql))
+	{
+		$sql->closeCursor();
+	}
+}
+
+/**
+ * Fonction qui permet d'obtenir le prénom et le nom d'un client en fonction
+ * de son identifiant unique
+ *
+ * @param string $token : Identifiant unique du client
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ */
+function getIdentiteClient($token)
+{
+	global $connexion;
+
+	$identite = ''; //Initialisation de l'identité.
+
+	//Prépare la requête
+	$sql = $connexion->prepare('SELECT nom, prenom FROM utilisateur WHERE token = :token');
+	$sql->bindParam(':token', $token);
+	try
+	{
+		$sql->execute();
+		$donnees_utilisateur = $sql->fetch();
+
+		//Assemble les valeurs pour former une chaine unique
+		$identite = $donnees_utilisateur['prenom'].' '.$donnees_utilisateur['nom'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+
+	//Si sql est instantié, fermer la connexion
+	if(isset($sql))
+	{
+		$sql->closeCursor();
+	}
+
+	return $identite;
+}
+
+
+
+/**
  * Fonction qui affiche tous les producteurs sous forme de liste
  * Cette fonction utilise également la méthode getIdentiteProducteur()
  *
@@ -156,7 +232,10 @@ function afficherProducteurs()
 		echo('Erreur : '.$e->getMessage());
 	}
 
-	$sql->closeCursor();
+	if(isset($sql))
+	{
+		$sql->closeCursor();
+	}
 }
 
 /**
@@ -1193,8 +1272,6 @@ function getPoidsLot($id_lot)
   return $poids;
 }
 
-
-
 /**
  * Fonction qui permet de savoir si un verger est AOC
  * c'est à dire que la variété cultivée et la ville ou se 
@@ -1212,30 +1289,30 @@ function getPoidsLot($id_lot)
  * @return boolean $return : renvoi TRUE si le verger est AOC, FALSE sinon
  *
  */
-/*
 function estAOC($idVerger)
 {
 	global $connexion;
 
 	//Déclaration des variables
 	$idCommune = NULL;
-	$idVerger = NULL;
+	$idVariete = NULL;
 
-	$aoc_commune = FALSE; //Indique si la commune est AOC
-	$aoc_variete = FALSE; //Indique si la variété est AOC
+	$aoc_commune = 0; //Indique si la commune est AOC
+	$aoc_variete = 0; //Indique si la variété est AOC
 
-	echo('C peut etre dans la fonction erreur testons demain');
-
+	//Récupère l'identifiant de la commune dans laquelle se trouve le verger
+	//Récupère l'identifiant de la variété cultivée dans la commune
+	//Préparation de la requête
 	$sql = $connexion->prepare('SELECT id_commune, id_variete FROM verger WHERE id_verger = :id_verger');
 	$sql->bindParam(':id_verger', $idVerger);
 	try
 	{
+		//Exécution de la requête
 		$sql->execute();
 		$donnees_verger = $sql->fetch();
 
 		$idCommune = $donnees_verger['id_commune'];
 		$idVariete = $donnees_verger['id_variete'];
-
 
 		//Requête qui récupère la valeur de commune_aoc
 		$sql = $connexion->prepare('SELECT commune_aoc FROM commune WHERE id_commune = :id_commune');
@@ -1268,19 +1345,149 @@ function estAOC($idVerger)
 			echo('Erreur : '.$e->getMessage());
 		}
 	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
 
 	//On vérifie si $aoc_commune et $aoc_verger vallent TRUE
-	if($aoc_commune == TRUE && $aoc_variete == TRUE)
+	if($aoc_commune == 1 && $aoc_variete == 1)
 	{
-		$return = TRUE;
+		$return = 1;
 	}
 	else
 	{
-		$return = FALSE;
+		$return = 0;
 	}
 
 	return $return;
 }
-*/
 
+/**
+ * Fonction qui permet de vérifier si l'utilisateur à les autorisations d'accès à la page
+ * et de le rediriger dans le cas contraire
+ *
+ * @param string $autorisation : Indique quel type d'utilisateur peut accéder à la page : PROD pour les producteurs, CLI pour les clients, et GEST pour les gestionnaires
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ * @global $_SESSION
+ *
+ */
+function sessionVerif( $autorisation)
+{
+	global $connexion;
+	global $_SESSION;
+
+	//Vérifie que la variable $_SESSION['token'] existe
+	if(isset($_SESSION['token']))
+	{
+		switch($autorisation)
+		{
+
+			//Sélectionne une requête en fonction du type de compte donné en paramètre
+			case 'PROD': //Producteur
+				$req = 'SELECT count(num_prod) AS compteur FROM producteur WHERE token = :token';
+			break;
+			case 'CLI': //Client
+				$req = 'SELECT count(num_client) AS compteur FROM client WHERE token = :token';
+			break;
+			case 'GEST': //Gestionnaire
+				$req = 'SELECT count(num_gestionnaire) AS compteur FROM gestionnaire WHERE token = :token';
+			break;
+			default:
+			break;
+
+			//Prépare la requête
+			$sql = $connexion->prepare($req);
+			$sql->bindParam(':token', $token);
+			try
+			{
+				//Envoi la requête
+				$sql->execute();
+				$donnees_utilisateur = $sql->fetch();
+
+				if($donnees_utilisateur['compteur'] < 1)
+				{
+					header('location: index.php');
+				}
+			}
+			catch(Exception $e)
+			{
+				echo('Erreur : '.$e->getMessage());
+			}
+		}
+	}
+	else
+	{
+		//Redirige vers la page de connexion
+		header('location: ../interface/index.php');
+	}
+}
+
+
+/**
+ * Fonction qui retourne un message en fonction du code
+ * donné en paramètre
+ *
+ * @param string $code : Code du message
+ *
+ * @return string $message : Contenu du message
+ *
+ */
+function affiMessage($code)
+{
+	//Sélectionne un message en fonction du code
+	switch($code)
+	{
+		case "e1":
+			$message = "Un ou plusieurs champs n'ont pas été correctement saisis";
+		break;
+		case "e2":
+			$message = "Un des champs saisis ne doit pas contenir de caractères numériques";
+		break;
+		case "e3":
+			$message = "Un des champs saisis ne dois contenir que des caractères alphabétiques";
+		break;
+		case "e4":
+			$message = "Les identifiants saisis ne correspondent à aucun utilisateur";
+		break;
+		case "e5":
+			$message = "Votre compte existe bien, mais n'est pas forcément activé";
+		break;
+		case "e6":
+			$message = "Une erreur interne à l'application a été rencontrée. L'opération n'a put être réalisée";
+		break;
+		case "e7":
+			$message = "Votre mot de passe n'est pas saisi";
+		break;
+		case "e8":
+			$message = "Votre adresse mail n'est pas saisie";
+		break;
+		case "e9":
+			$message = "Le nombre d'arbres sélectionnés est inférieur à zéro";
+		break;
+		case "e10":
+			$message = "Les deux mots de passe saisis sont différents";
+		break;
+		case "e11":
+			$message = "Vous n'avez pas confirmé le mot de passe";
+		break;
+		case "s1":
+			$message = "L'opération a été réalisée avec succès";
+		break;
+		case "s2":
+			$message = "Votre commande a bien été enregistrée";
+		break;
+		case "s3":
+			$message = "Votre commande a bien été supprimée";
+		break;
+		default:
+			$message = '';
+		break;
+
+		$message = 'connard de merde';
+
+		return $message;
+	}
+}
 ?>

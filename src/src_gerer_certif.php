@@ -29,12 +29,12 @@ if(isset($_POST['txt_libelle_certif']))
 	}
 	else //Si tous les champs ne sont pas saisis.
 	{
-		$erreur = 2;
+		$erreur = 'e6';
 	}
 }
 else
 {
-	$erreur = 3;
+	$erreur = 'e1';
 }
 
 
@@ -45,6 +45,6 @@ if(isset($erreur)) //S'il y a une erreur renvoi vers la page certification avec 
 }
 else //Il n'y a pas d'erreur
 {
-	header('location: ../interface/certifications.php');	
+	header('location: ../interface/certifications.php?msg=s1');	
 }
 

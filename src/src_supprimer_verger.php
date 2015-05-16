@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 //Importe la connexion à la base de données
 include('bdd_connect.php'); 
@@ -13,7 +14,7 @@ if(isset($_GET['verger']) && is_numeric($_GET['verger']))
 		$sql->execute();
 		$donnees_verger = $sql->fetch();
 
-		if($donnees_verger['num_producteur'] == $_SESSION['num_prod'] || $_SESSION['type'] == 'gestionnaire')
+		if($donnees_verger['num_prod'] == $_SESSION['num_prod'] || $_SESSION['type'] == 'gestionnaire')
 		{
 			$sql = $connexion->prepare('DELETE FROM verger WHERE id_verger = :id_verger');
 			$sql->bindParam(':id_verger', $_GET['verger']);
@@ -30,7 +31,7 @@ if(isset($_GET['verger']) && is_numeric($_GET['verger']))
 		}
 		else
 		{
-			header('location: vergers_producteur.php');
+			header('location: ../interface/vergers_producteur.php');
 		}
 	}
 	catch(Exception $e)
@@ -40,5 +41,11 @@ if(isset($_GET['verger']) && is_numeric($_GET['verger']))
 }
 else
 {
-	header('location: vergers_producteur.php');
+	header('location: ../interface/vergers_producteur.php');
 }
+
+
+header('location: ../interface/vergers_producteur.php?msg=s1');
+
+
+

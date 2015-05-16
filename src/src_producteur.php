@@ -35,4 +35,4 @@ if(isset($_POST['lst_utilisateurs']) && !empty($_POST['lst_utilisateurs']))
 $sql->closeCursor(); //Ferme l'objet PDO
 
 //Redirection vers la page de gestion des variétés
-header('location: ../interface/producteurs.php');
+header('location: ../interface/producteurs.php?msg=s1');

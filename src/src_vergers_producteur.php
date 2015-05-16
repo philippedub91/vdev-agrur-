@@ -54,27 +54,27 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 				}
 				else
 				{
-					$erreur = 1; 
+					$erreur = 'e1'; 
 				}
 			}
 			else
 			{
-				$erreur = 1;
+				$erreur = 'e1';
 			}
 		}
 		else
 		{
-			$erreur = 1;
+			$erreur = 'e1';
 		}
 	}
 	else
 	{
-		$erreur = 1;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 
@@ -108,5 +108,5 @@ if(isset($erreur))
 }
 else
 {
-	header('location: ../interface/vergers_producteur.php');
+	header('location: ../interface/vergers_producteur.php?msg=s1');
 }

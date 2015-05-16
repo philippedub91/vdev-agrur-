@@ -6,7 +6,7 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 	if(isset($_POST['txt_mdp']) && !empty($_POST['txt_mdp']))
 	{
 		$mail = addslashes($_POST['txt_mail']);
-		$mdp = addslashes($_POST['txt_mdp']);
+		$mdp = sha1($_POST['txt_mdp']);
 
 		//Connexion à la base de données
 		require_once('bdd_connect.php'); 
@@ -100,8 +100,6 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 		}
 
 		//Redirection vers l'espace personnel de l'utilisateur
-
-		//echo('utilisateur : '.$_SESSION['type']);
 		switch($_SESSION['type'])
 		{
 			case 'producteur':
@@ -119,10 +117,10 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 	}
 	else
 	{
-		header('location: ../interface/index.php?msg=3'); //Le mot de passe n'est pas saisi
+		header('location: ../interface/index.php?msg=e7'); //Le mot de passe n'est pas saisi
 	}
 }
 else
 {
-	header('location: ../interface/index.php?msg=4'); //L'adresse mail n'est pas saisie
+	header('location: ../interface/index.php?msg=e8'); //L'adresse mail n'est pas saisie
 }

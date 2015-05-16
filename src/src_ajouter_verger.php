@@ -57,31 +57,31 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 						echo('Erreur : '.$e->getMessage());
 					}
 
-					header('location: ../interface/vergers_producteur.php');
+					header('location: ../interface/vergers_producteur.php?msg=s1');
 				}
 				else
 				{
-					$erreur = 1;
+					$erreur = 'e1';
 				}
 			}
 			else
 			{
-				$erreur = 2;
+				$erreur = 'e1';
 			}
 		}
 		else
 		{
-			$erreur = 3;
+			$erreur = 'e1';
 		}
 	}
 	else
 	{
-		$erreur = 4;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 5;
+	$erreur = 'e1';
 }
 
-//header('location: ../interface/ajout_verger.php?msg='.$erreur); 
+header('location: ../interface/ajout_verger.php?msg='.$erreur); 

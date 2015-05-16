@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
 //Vérifie si l'identifiant de la livraison n'est pas dans une variable d'adresse
 if(!isset($_GET['livraison']))
 {
@@ -8,12 +13,12 @@ if(!isset($_GET['livraison']))
   header('location: livraison_gestionnaire.php');
 }
 
-//Gestion des messages d'erreur :
+//Gestion des messages de succès et d'erreur
 $message = ''; //Initialise message
 
-if(isset($_GET['msg']) && $_GET['msg'] == 1 )
+if(isset($_GET['msg']))
 {
-  $message = 'Un ou plusieurs champs n\'ont pas été saisis correctement.'; 
+  $message = affiMessage($_GET['msg']);
 } 
 ?>
 
@@ -45,6 +50,9 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
         dans la livraison.
       </p>
 
+      <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($message); ?>
+
       <div class="ui-corner-all custom-corners">
         <div class="ui-bar ui-bar-c">
           <h3>Création du lot</h3>
@@ -53,6 +61,19 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
           <form method="POST" action="../src/src_creer_lot.php" data-ajax="false">
             <label>Calibre :</label>
             <?php listeCalibre('lst_calibre'); //Fonction qui crée une liste de noix ?>
+
+            <label>Type produit:</label>
+            <select name="lst_type_produit">
+              <?php
+              $sql = $connexion->query('SELECT * FROM type_produit');
+              while($donnees_type = $sql->fetch())
+              {
+              ?>
+                <option value="<?php echo($donnees_type['id_type_produit']); ?>"><?php echo($donnees_type['libelle_type_produit']); ?></option>
+              <?php
+              }
+              ?>
+            </select>
 
             <label for="sld_quantite">Quantité :</label>
             <input type="range" name="sld_quantite" value="60" min="0" max="1000" step="50" data-highlight="true">

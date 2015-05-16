@@ -1,29 +1,16 @@
 <?php
 session_start();
 
-//Vérifie si l'utilisateur est connecté et producteur
-if(!isset($_SESSION['type']))
-{
-  header('location: index.php');
-}
-elseif($_SESSION['type'] != 'producteur')
-{
-  header('location: espace_producteur.php');
-}
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
 
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
 
 //Gestion des messages d'erreur
-$msg_erreur = '';
+$message = '';
 if(isset($_GET['msg']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $msg_erreur = 'Certains champs sont vide ou ne sont pas saisis correctement. Veuillez recommancer votre saisie.';
-    break;
-    default:
-    break;
-  }
+  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -48,13 +35,13 @@ if(isset($_GET['msg']))
 
   <div class="main-container">
       <div class="sub-container">
-        <!--Affichage de la variable contenant le message d'erreur-->
-        <span style="color:red;"><?php echo($msg_erreur); ?></span>
-
         <p>
           Ici, vous pouvez gérer votre profil producteur et modifier vote mot
           de passe.
         </p>
+
+        <!--Affichage d'un message d'erreur ou de succès-->
+        <?php echo($message); ?>
 
         <form method="POST" action="../src/src_profil_producteur.php" data-ajax="false">
 

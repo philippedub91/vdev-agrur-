@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -8,6 +13,7 @@ session_start();
 <head>
   <title>Espace producteur</title>
   <?php include('../common/head.php'); ?>
+
 </head>
 
 <body>

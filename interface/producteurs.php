@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -28,7 +33,7 @@ session_start();
   			Cette liste, présente tous les producteurs membres de la coopérative.
   		</p>
   		
-		<ul data-role="listview" data-filter="true" data-filter-placeholder="Search fruits..." data-inset="true">
+		<ul data-role="listview" data-filter="true" data-filter-placeholder="Rechercher un producteur" data-inset="true">
 			<?php afficherProducteurs(); ?>
 		</ul>
     </div>

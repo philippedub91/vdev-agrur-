@@ -3,6 +3,11 @@ session_start();
 
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php'); 
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 

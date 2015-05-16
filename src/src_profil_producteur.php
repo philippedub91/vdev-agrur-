@@ -13,19 +13,11 @@ if(isset($_POST['txt_adresse_prod']) && !empty($_POST['txt_adresse_prod']))
 		{
 			if(isset($_POST['txt_societe']) && !empty($_POST['txt_societe']))
 			{
-				echo('On passe ici');
 				//Sécurise les valeurs pour éviter les insertions de code
 				$adresse_prod = addslashes($_POST['txt_adresse_prod']);
 				$nom_representant = addslashes($_POST['txt_nom_representant']);
 				$prenom_representant = addslashes($_POST['txt_prenom_representant']);
 				$societe = addslashes($_POST['txt_societe']);
-
-				echo('Adresse producteur : '.$adresse_prod.'<br/>');
-				echo('Nom représentant : '.$nom_representant.'<br/>');
-				echo('Prenom représentant : '.$prenom_representant.'<br/>');
-				echo('Société : '.$societe.'<br/>');
-				echo('Numéro producteur : '.$_SESSION['num_prod'].'<br/>');
-				echo('Identifiant producteur : '.$_SESSION['token'].'<br/>');
 
 				//Préparation de la requête
 				$sql = $connexion->prepare('UPDATE producteur SET adresse_prod = :adresse_prod, nom_representant_prod = :nom_representant_prod, prenom_representant_prod = :prenom_representant_prod, societe = :societe WHERE token = :token');
@@ -49,22 +41,22 @@ if(isset($_POST['txt_adresse_prod']) && !empty($_POST['txt_adresse_prod']))
 			}
 			else
 			{
-				$erreur = 1;
+				$erreur = 'e1';
 			}
 		}
 		else
 		{
-			$erreur = 1;
+			$erreur = 'e1';
 		}
 	}
 	else
 	{
-		$erreur = 1;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 
@@ -76,5 +68,5 @@ if(isset($erreur))
 }
 else
 {
-	header('location: ../interface/profil_producteur.php');
+	header('location: ../interface/profil_producteur.php?msg=s1');
 }

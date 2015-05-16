@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
 //Vérifie si l'identifiant de la certification 
 //n'est pas donnée en variable d'adresse.
 if(!isset($_GET['certif']))
@@ -14,29 +19,17 @@ if(!isset($_GET['certif']))
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>Mes vergers</title>
+  <title>Certifications</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
 
   <?php
-  //Gestion du message d'erreur
-  $erreur = '';
+  //Gestion des messages de succès et d'erreur
+  $message = '';
 
   if(isset($_GET['msg']))
   {
-    switch($_GET['msg'])
-    {
-      case 1:
-        $erreur = 'Modification non réalisée. Le nom n\'est pas correctement saisi.';
-      break;
-      case 2:
-        $erreur = 'Modification non réalisée. La superficie saisie n\'est pas conforme';
-      break;
-      case 3:
-        $erreur = 'Modification non réalisée. Le nombre d\'arbres n\'est pas ou mal saisi';
-      default:
-      break;
-    }
+    $message = affiMessage($_GET['msg']);
   }
   ?>
 </head>
@@ -59,10 +52,9 @@ if(!isset($_GET['certif']))
       Vous pouvez modifier ou supprimer cette certifications
       </p>
 
-      <!--Affichage d'un message d'erreur-->
-      <p style="color:red;">
-        <?php echo($erreur); ?>
-      </p>
+      <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($message); ?>
+
 
       <ul data-role="listview">
         <li><b>Nom de la certification : </b><?php echo(getLibelleCertif($_GET['certif'])); ?></li>

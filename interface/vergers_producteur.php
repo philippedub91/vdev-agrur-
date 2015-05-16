@@ -1,22 +1,20 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
+
 
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
 //Gestion des messages d'erreur
-$message_erreur = '';
+$message = '';
 if(isset($_GET['msg']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $message_erreur = 'Un ou plusieurs champs ne sont pas ou mal saisis. Merci de vérifier le formulaire avant de continuer.';
-    break;
-    default:
-    break;
-  }
+  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -53,6 +51,9 @@ if(isset($_GET['msg']))
         et d'options. Vous pouvez également
         <a href="ajout_verger.php">ajouter des vergers</a>.
       </p>
+
+      <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($message); ?>
 
       <!--Affiche la liste des vergers du producteur-->
       <ul data-role="listview" data-filter="true" data-filter-placeholder="Chercher un verger" data-inset="true">

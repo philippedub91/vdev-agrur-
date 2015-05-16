@@ -1,12 +1,17 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
 //Gestion des messages d'erreur :
 $message = ''; //Initialise message
 
-if(isset($_GET['msg']) && $_GET['msg'] == 1 )
+if(isset($_GET['msg']))
 {
-  $message = 'Un ou plusieurs champs n\'ont pas été saisis correctement.'; 
+  $message = affiMessage($_GET['msg']); 
 } 
 ?>
 
@@ -37,10 +42,13 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
         <?php echo($_GET['livraison']); ?>.
       </p>
 
+      <!--Affichage du message d'erreur ou de succès-->
+      <?php echo($message); ?>
+
       <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
         <li data-role="list-divider">Lots</li>
         <?php
-        $sql = $connexion->prepare('SELECT * FROM lot_production WHERE id_livraison = :id_livraison');
+        $sql = $connexion->prepare('SELECT * FROM composer WHERE id_livraison = :id_livraison');
         $sql->bindParam(':id_livraison', $_GET['livraison']);
         try
         {
@@ -55,8 +63,8 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
                   <td><?php echo($donnees_lot['id_lot']); ?></td>
                 </tr>
                 <tr>
-                  <td><b>Calibre :</b></td>
-                  <td><?php echo(getLibelleCalibre($donnees_lot['calibre'])); ?></td>
+                  <!--td><b>Calibre :</b></td>
+                  <td><?php echo(getLibelleCalibre($donnees_lot['calibre'])); ?></td-->
                 </tr>
                 <tr>
                   <td><b>Poids :</b></td>

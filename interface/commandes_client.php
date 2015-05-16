@@ -1,13 +1,10 @@
 <?php
 session_start();
 
-//Gestion des messages d'erreur :
-$message = ''; //Initialise message
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
 
-if(isset($_GET['msg']) && $_GET['msg'] == 1 )
-{
-  $message = 'Un ou plusieurs champs n\'ont pas été saisis correctement.'; 
-} 
+sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -35,9 +32,6 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
       <p>
         Voici la liste de vos commandes.
       </p>
-
-      <p style="color:red; font-weight=bold;"><?php echo($message); ?></p>
-
       
     <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
       <li data-role="list-divider">Mes commandes :</li>

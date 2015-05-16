@@ -27,25 +27,25 @@ if(isset($_POST['txt_date_livraison']) && !empty($_POST['txt_date_livraison']))
 					echo('Erreur : '.$e->getMessage());
 				}
 
-				header('location: ../interface/livraison_producteur.php');
+				header('location: ../interface/livraison_producteur.php?msg=s1');
 			}
 			else
 			{
-				$erreur = 1;
+				$erreur = 'e1';
 			}
 		}
 		else
 		{
-			$erreur = 1;
+			$erreur = 'e1';
 		}
  	}
  	else
  	{
- 		$erreur = 1;
+ 		$erreur = 'e1';
  	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 header('location: ../interface/livraison_producteur.php?msg='.$erreur);

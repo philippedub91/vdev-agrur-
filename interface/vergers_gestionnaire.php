@@ -1,22 +1,19 @@
 <?php
 session_start();
 
-
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
-//Gestion des messages d'erreur
-$message_erreur = '';
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
+//Gestion des messages d'erreur et de succès
+$message = '';
 if(isset($_GET['msg']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $message_erreur = 'Un ou plusieurs champs ne sont pas ou mal saisis. Merci de vérifier le formulaire avant de continuer.';
-    break;
-    default:
-    break;
-  }
+  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -52,6 +49,9 @@ if(isset($_GET['msg']))
       	AGRUR. Si vous souhaitez obtenir plus d'informations concernant un
       	de ces vergers, cliquez dessus.
       </p>
+
+      <!--Affichage des messages de succès ou d'erreur-->
+      <?php echo($message); ?>
 
       <!--Affiche la liste des vergers du producteur-->
       <ul data-role="listview" data-filter="true" data-filter-placeholder="Chercher un verger" data-inset="true">

@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +82,13 @@ session_start();
         nous contacter au 00.00.00.00.00.
       </p>
 
+      <!--h4>Proposer une livraison :</h4>
+      <p>
+        Si vous êtes producteur de noix mais que vous ne travaillez pas
+        avec la coopérative AGRUR, vous pouvez tout de même livrer des noix
+        en remplisant ce formulaire. Votre livraison sera ensuite validée par
+        un de nos gestionnaires.
+      </p-->
     </div>
 
   </div>

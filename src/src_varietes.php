@@ -4,33 +4,15 @@ session_start();
 //Importations
 include('bdd_connect.php'); //Connexion à la base de données
 
-//Modification de l'aoc des variétés
-//Remise à zéro de toutes les variétés
-$sql = $connexion->query('UPDATE variete SET AOC = 0'); //Remise à zéro de toutes les variétés
-
-if(isset($_POST['ckb_aoc']))
+//Ajout du label aoc à une variete
+//Si ckbAjouter est coché
+if(isset($_POST['ckbAjouter']))
 {
-	foreach($_POST['ckb_aoc'] as $aoc)
+	//Pour chaque checkbox nommée ckbAjouter
+	foreach($_POST['ckbAjouter'] as $variete)
 	{
+		//Mettre à jour le champ AOC avec la valeur 1
 		$sql = $connexion->prepare('UPDATE variete SET AOC = 1 WHERE id_variete = :id_variete');
-		$sql->bindParam(':id_variete', $aoc);
-		try
-		{
-			$sql->execute();
-		}
-		catch(Exception $e)
-		{
-			echo('Erreur : '.$e->getMessage());
-		}
-	}
-}
-
-//Suppression des variétés sélectionnées
-if(isset($_POST['ckb_supprimer']))
-{
-	foreach($_POST['ckb_supprimer'] as $variete)
-	{
-		$sql = $connexion->prepare('DELETE FROM variete WHERE id_variete = :id_variete');
 		$sql->bindParam(':id_variete', $variete);
 		try
 		{
@@ -43,6 +25,28 @@ if(isset($_POST['ckb_supprimer']))
 	}
 }
 
+//Suppression du label aoc à une variete
+//Si ckbRetirer est coché
+if(isset($_POST['ckbRetirer']))
+{
+	//Pour chaque checkbox nommée ckbRetirer
+	foreach($_POST['ckbRetirer'] as $variete)
+	{
+		//Mettre à jour la champ AOC avec la valeur 0
+		$sql = $connexion->prepare('UPDATE variete SET AOC = 0 WHERE id_variete = :id_variete');
+		$sql->bindParam(':id_variete', $variete);
+		try
+		{
+			$sql->execute();
+		}
+		catch(Exception $e)
+		{
+			echo('Erreur : '.$e->getMessage());
+		}
+	}
+}
+
+/*
 //Ajout d'une variété
 if(isset($_POST['txt_libelle_variete']) && !empty($_POST['txt_libelle_variete']))
 {
@@ -78,8 +82,9 @@ if(isset($_POST['txt_libelle_variete']) && !empty($_POST['txt_libelle_variete'])
 		echo('Erreur : '.$e->getMessage());
 	}
 }
+*/
 
 $sql->closeCursor(); //Ferme l'objet PDO
 
 //Redirection vers la page de gestion des variétés
-header('location: ../interface/varietes.php');
+header('location: ../interface/varietes.php?msg=s1');

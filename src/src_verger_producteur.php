@@ -46,27 +46,27 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 				}
 				else
 				{
-					$erreur = 1; 
+					$erreur = 'e1'; 
 				}
 			}
 			else
 			{
-				$erreur = 1;
+				$erreur = 'e1';
 			}
 		}
 		else
 		{
-			$erreur = 1;
+			$erreur = 'e1';
 		}
 	}
 	else
 	{
-		$erreur = 1;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 //Suppression de vergers
@@ -76,4 +76,12 @@ else
 $sql->closeCursor(); //Ferme l'objet PDO
 
 //Redirection vers la page de gestion des variétés
-header('location: ../interface/producteurs.php');
+if(isset($erreur))
+{
+	header('location: ../interface/verger_producteur.php?msg='.$erreur);
+}
+else
+{
+	header('location: ../interface/producteurs.php?msg=s1');
+}
+?>

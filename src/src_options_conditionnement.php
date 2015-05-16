@@ -42,5 +42,4 @@ if(isset($_POST['txt_poids']) && !empty($_POST['txt_poids']))
 	}
 }
 
-echo('Normalement, tout ce passe bien');
-//header('location: ../interface/options_conditionnement.php');
+header('location: ../interface/options_conditionnement.php?msg=s1');

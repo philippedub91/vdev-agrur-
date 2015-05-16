@@ -1,12 +1,17 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
+
 //Gestion des messages d'erreur :
 $message = ''; //Initialise message
 
-if(isset($_GET['msg']) && $_GET['msg'] == 1 )
+if(isset($_GET['msg']))
 {
-  $message = 'Un ou plusieurs champs n\'ont pas été saisis correctement.'; 
+  $message = affiMessage($_GET['message']); 
 } 
 ?>
 
@@ -17,6 +22,20 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
   <title>Mes livraisons</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
+
+  <!--Eléments nécessaires à l'affichage du calendrier
+  lors de la sélection du champ date-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="../js/jquery-ui.js"></script>
+  <script>
+    $(function() {
+      $( "#datepicker" ).datepicker( $.datepicker.regional[ "fr" ] );
+      $( "#locale" ).change(function() {
+        $( "#datepicker" ).datepicker( "option",
+          $.datepicker.regional[ $( this ).val() ] );
+      });
+    });
+  </script>
 </head>
 
 <body>
@@ -37,7 +56,8 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
         Vous pouvez également en ajouter une en cliquant sur le bouton ci-dessous.
       </p>
 
-      <p style="color:red; font-weight=bold;"><?php echo($message); ?></p>
+      <!--Affiche un message de succès ou d'erreur-->
+      <?php echo($message); ?>
 
       <div data-role="collapsible"> 
         <h4>Ajouter une livraison</h4>
@@ -51,7 +71,7 @@ if(isset($_GET['msg']) && $_GET['msg'] == 1 )
           <!--Date de livraison-->
           <div class="ui-field-contain">
             <label for="txt_date_livraison">Date de livraison :</label>
-            <input name="txt_date_livraison" type="text" data-role="" placeholder="Date de livraison">
+            <input name="txt_date_livraison"  id="datepicker" type="datr" placeholder="Date de livraison">
           </div>
 
           <!--Verger d'origine de la livraison-->

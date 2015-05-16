@@ -1,13 +1,15 @@
 <?php
 session_start();
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
 $message = '';
 if(isset($_GET['msg']))
 {
-	if($_GET['msg'] == 1)
-	{
-		$message = 'La variété que vous tentez de créer existe déjà.'; 	
-	}	
+  $message = affiMessage($_GET['msg']); 
 }
 ?>
 
@@ -25,76 +27,146 @@ if(isset($_GET['msg']))
     <?php include('../common/header.php'); ?>
   </header>
 
-  <div class="headline">
+  <div data-role="header">
+    <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
     <h1>Variétés</h1>
-    <a href="espace_gestionnaire.php"><img src="../images/icones/home.png" height="30" align="absmiddle" > Accueil</a></a>
   </div>
 
-  <div class="content-body">
-      <div class="panel">
-        <form method="post" action="../src/src_varietes.php">
-          <table class="tableau_gestion" style="width:750px;">
-            <tr>
-              <th>N°</th>
-              <th>Variété</th>
-              <th>AOC</th>
-              <th style="width:15px;">Supprimer</th>
-            </tr>
+  <div class="main-container">
+      <div class="sub-container">
+        <p>
+          Voici la liste des différentes variétés cultivées par les producteurs de la 
+          coopérative.
+        </p>
 
-            <?php
-            $num_variete = 1; //Numéro d'affichage de la variété
-            
-            //Récupération des variétés
-            $sql = $connexion->query('SELECT * FROM variete');
-            while($donnees_variete = $sql->fetch())
-            {
-              //Si nombre impaire fond sombre, sinon fond clair
-              if($num_variete % 2 == 1)
+        <!--Liste des variétés-->
+        <div class="ui-corner-all custom-corners">
+          <div class="ui-bar ui-bar-c">
+            <h3>Les variétés</h3>
+          </div>
+          <div class="ui-body ui-body-c">
+            <ul data-role="listview">
+              <?php
+              $sql = $connexion->query('SELECT * FROM variete');
+              while($donnees_variete = $sql->fetch())
               {
-                echo('<tr style="background-color:rgb(102, 102, 102); color:white;">');
+              ?>
+                <li><?php echo($donnees_variete['libelle_variete']); ?></li>
+              <?php
               }
-              else
+
+              $sql->closeCursor();
+              ?>
+            </ul>
+          </div>
+        </div>
+        <!--Fin varietes aoc-->
+
+        <div style="height:30px;"><!--separation--></div>
+
+
+        <!--Liste des variétés aoc-->
+        <div class="ui-corner-all custom-corners">
+          <div class="ui-bar ui-bar-c">
+            <h3>Les variétés AOC</h3>
+          </div>
+          <div class="ui-body ui-body-c">
+
+            <!--Bouton pour ajouter le label aoc à une variété-->
+            <a href="#popupAjouterVarieteAOC" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-a" data-transition="pop">Ajouter une variété</a>
+            <!--Bouton pour retirer le label aoc à une variété-->
+            <a href="#popupRetirerVarieteAOC" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-minus ui-btn-a" data-transition="pop">Retirer</a>
+
+            <ul data-role="listview">
+              <?php 
+              $sql = $connexion->query('SELECT * FROM variete WHERE AOC = 1');
+              while($donnees_variete = $sql->fetch())
               {
-                echo('<tr style="background-color:rgb(210, 210, 210);">');
+              ?>
+                <li><?php echo($donnees_variete['libelle_variete']); ?></li>
+              <?php
               }
-            ?>
-                <td><?php echo($num_variete); ?></td>
-                <td><?php echo($donnees_variete['libelle_variete']); ?></td>
-                <td style="text-align:center;">
-                  <?php
-                  if($donnees_variete['AOC'] == 1)
-                  {
-                  ?>
-                    <input type="checkbox" name="ckb_aoc[]" checked value="<?php echo($donnees_variete['id_variete']); ?>">
-                  <?php
-                  }
-                  else
-                  {
-                  ?>
-                    <input type="checkbox" name="ckb_aoc[]" value="<?php echo($donnees_variete['id_variete']); ?>">
-                  <?php
-                  }
-                  ?>
-                </td>
-                <td style="text-align:center;"><input type="checkbox" name="ckb_supprimer[]" value="<?php echo($donnees_variete['id_variete']); ?>"></td>
-              </tr>
-            <?php
-            $num_variete++;
-            }
-            ?>
-          </table>
+              ?>
+            </ul>
+          </div>
+          <!--Fin variétés aoc-->
 
-          <div id="separateur"><!--vide--></div>
+        <!--FENETRES MODALES-->
+        <!--Fenêtre modale d'ajout de label aoc à une variete-->
+        <div data-role="popup" id="popupAjouterVarieteAOC" data-theme="c" class="ui-corner-all">
+          <div data-role="header" data-theme="c">
+            <h1>Ajouter une variete AOC</h1>
+          </div>
+          <form method="post" action="../src/src_varietes.php" data-ajax="false">
+            <div style=" padding:15px; width:300px;">
+              <ul data-role="listview">
+              <?php
+              $sql = $connexion->query('SELECT * FROM variete WHERE AOC = 0');
+              try
+              {
+                $sql->execute();
+                while($donnees_variete = $sql->fetch())
+                {
+                ?>
+                <li>
+                  <input type="checkbox" name="ckbAjouter[]" value="<?php echo($donnees_variete['id_variete']); ?>">
+                  <label for="ckbAjouter[]"><?php echo($donnees_variete['libelle_variete']); ?></label>
+                </li>
 
-          <label for="txt_libelle_variete">Ajouter une variété</label>
-          <input type="text" name="txt_libelle_variete" placeholder="Nom de la variété" size="50">
+                <?php
+                }
+              }
+              catch(Exception $e)
+              {
+                echo('Erreur : '.$e->getMessage());
+              }
+              ?>
+            </ul>
+              <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-plus">Ajouter</button>
+            </div>
+          </form>
+        </div>
+        <!--Fin ajout label-->
 
-     	  <div id="separateur"><!--vide--></div>
 
-          <input type="submit" id="form_btn" style="float:right;" value="Enregistrer les modifications">
-          <span style="color:red; float:right; margin-top:10px;"><?php echo($message); ?></span>
 
-        </form>
+        <!--Fenêtre modale de suppression de label aoc à une variete-->
+        <div data-role="popup" id="popupRetirerVarieteAOC" data-theme="c" class="ui-corner-all">
+          <div data-role="header" data-theme="c">
+            <h1>Ajouter une variete AOC</h1>
+          </div>
+          <form method="post" action="../src/src_varietes.php" data-ajax="false">
+            <div style=" padding:15px; width:300px;">
+              <ul data-role="listview">
+              <?php
+              $sql = $connexion->query('SELECT * FROM variete WHERE AOC = 1');
+              try
+              {
+                $sql->execute();
+                while($donnees_variete = $sql->fetch())
+                {
+                ?>
+                <li>
+                  <input type="checkbox" name="ckbRetirer[]" value="<?php echo($donnees_variete['id_variete']); ?>">
+                  <label for="ckbRetirer[]"><?php echo($donnees_variete['libelle_variete']); ?></label>
+                </li>
+
+                <?php
+                }
+              }
+              catch(Exception $e)
+              {
+                echo('Erreur : '.$e->getMessage());
+              }
+              ?>
+            </ul>
+              <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-plus">Ajouter</button>
+            </div>
+          </form>
+        </div>
+        <!--Fin ajout label-->
+
+        </div>
       </div>
   </div>
 </body>

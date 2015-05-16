@@ -1,19 +1,10 @@
 <?php
 session_start();
 
-//Gestion des messages d'erreur
-$message_erreur = '';
-if(isset($_GET['msg']))
-{
-  switch($_GET['msg'])
-  {
-    case 1:
-      $message_erreur = 'Un ou plusieurs champs ne sont pas ou mal saisis. Merci de vérifier le formulaire avant de continuer.';
-    break;
-    default:
-    break;
-  }
-}
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -37,10 +28,6 @@ if(isset($_GET['msg']))
 
   <div class="content-body">
       <div class="panel">
-
-        <!--Affiche le message d'erreur contenu dans la variable $message_erreur-->
-        <span style="color:red;"><?php echo($message_erreur); ?></span>
-
         <form method="POST" action="../src/src_vergers_producteur.php">
           <table class="tableau_gestion" style="width:750px;">
             <tr>

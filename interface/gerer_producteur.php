@@ -1,7 +1,16 @@
 <?php
 session_start();
 
-$erreur = "";
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
+//Gestion des messages de succès et d'erreur
+if(isset($_GET['msg']))
+{
+  $message = affiMessage($_GET['msg']);
+}
 
 //Redirige vers la liste des producteurs si la variable
 //d'adresse $_GET['prod'] n'existe pas.
@@ -37,10 +46,8 @@ if(!isset($_GET['prod']))
       	Voici les informations concernant le producteur <?php echo(getIdentiteProducteur($_GET['prod'])); ?>.
       </p>
 
-      <!--Affichage d'un message d'erreur-->
-      <p style="color:red;">
-        <?php echo($erreur); ?>
-      </p>
+      <!--Affichage d'un message d'erreur ou de succès-->
+      <?php echo($message); ?>
 
       <!--Informations personnelles-->
       <div class="ui-corner-all custom-corners">

@@ -1,6 +1,15 @@
 <?php
 session_start();
 
-session_destroy(); //Détruit la session
+//Tente de fermer la session
+try
+{
+	session_destroy();
+}
+catch(Exception $e)
+{
+	echo('Erreur : '.$e->getMessage());
+}
+
 header('location: ../interface/index.php'); //Redirige vers la page de connexion
 ?>

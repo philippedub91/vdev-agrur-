@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -28,33 +33,35 @@ session_start();
         </p>
 
         <!--Liste des communes AOC-->
-        <div data-role="header">
-          <h6>Les communes</h6>
+        <div class="ui-corner-all custom-corners">
+          <div class="ui-bar ui-bar-c">
+            <h3>Les communes</h3>
+          </div>
+          <div class="ui-body ui-body-c">
+             <ul data-role="listview">
+                <?php
+                $sql = $connexion->query('SELECT id_commune, nom_commune FROM commune WHERE commune_aoc = 0');
+                try
+                {
+                  $sql->execute();
+                  while($donnees_commune = $sql->fetch())
+                  {
+                  ?>
+                    <li>
+                      <?php echo($donnees_commune['nom_commune']); ?>
+                    </li>
+                  <?php
+                  }
+                }
+                catch(Exception $e)
+                {
+                  echo('Erreur : '.$e->getMessage());
+                }
+                ?>
+              </ul>
+          </div>
         </div>
-
-        <ul data-role="listview">
-          <?php
-          $sql = $connexion->query('SELECT id_commune, nom_commune FROM commune WHERE commune_aoc = 0');
-          try
-          {
-            $sql->execute();
-            while($donnees_commune = $sql->fetch())
-            {
-            ?>
-              <li>
-                <?php echo($donnees_commune['nom_commune']); ?>
-              </li>
-
-            <?php
-            }
-          }
-          catch(Exception $e)
-          {
-            echo('Erreur : '.$e->getMessage());
-          }
-          ?>
-        </ul>
-        <!--Fin communes AOC-->
+              <!--Fin communes AOC-->
 
         <div style="height:30px;"><!--separation--></div>
 

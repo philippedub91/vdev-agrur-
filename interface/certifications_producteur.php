@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
 ?>
 
 
@@ -30,7 +35,7 @@ session_start();
 
       <div class="ui-corner-all custom-corners">
         <div class="ui-bar ui-bar-c">
-          <h3>Heading</h3>
+          <h3>Mes certifications</h3>
         </div>
         <div class="ui-body ui-body-c">
           <ul data-role="listview">

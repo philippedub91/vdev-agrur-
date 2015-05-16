@@ -33,7 +33,6 @@ if(isset($_POST['hd_prod']))
 					catch(Exception $e)
 					{
 						echo('Erreur : '.$e->getMessage());
-						$erreur = 1;
 					}
 				}
 			}
@@ -42,12 +41,11 @@ if(isset($_POST['hd_prod']))
 	catch(Exception $e)
 	{
 		echo('Erreur : '.$e->getMessage());
-		$erreur = 1;
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e6';
 }
 
 
@@ -61,7 +59,7 @@ if(isset($erreur)) //Une erreur a été rencontrée
 }
 else //Il n'y a pas d'erreurs
 {
-	header('location: ../interface/gerer_producteur.php?prod='.$_POST['hd_prod']);
+	header('location: ../interface/gerer_producteur.php?prod='.$_POST['hd_prod'].'&msg=s1');
 }
 
 //header('location: ../interface/ajout_verger.php?msg='.$erreur); 

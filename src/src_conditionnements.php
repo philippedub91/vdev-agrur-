@@ -27,12 +27,12 @@ if(isset($_POST['txt_conditionnement']) && !empty($_POST['txt_conditionnement'])
 	}
 	else
 	{
-		$erreur = 1;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 
@@ -43,6 +43,6 @@ if(isset($erreur)) //Une erreur de saisie a été rencontrée
 }
 else
 {
-	header('location: ../interface/conditionnements.php');
+	header('location: ../interface/conditionnements.php?msg=s1');
 }
 ?>

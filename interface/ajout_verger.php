@@ -4,30 +4,18 @@ session_start();
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
+
+
+
 //Gestion des messages d'erreur
-$message_erreur = '';
+$message = '';
 if(isset($_GET['msg']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $message_erreur = 'La variété n\'est pas ou mal renseignée.';
-    break;
-    case 2:
-      $message_erreur = 'La commune n\'est pas ou mal renseignée.';
-    break;
-    case 3:
-      $message_erreur = 'Le nombre d\'arbres par hectare n\'est pas ou mal renseigné.';
-    break;
-    case 4:
-      $message_erreur = 'La superficie n\'est pas ou mal renseignée.';
-    break;
-    case 5:
-      $message_erreur = 'Le nom du verger n\'est pas ou mal renseigné.';
-    break;
-    default:
-    break;
-  }
+  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -37,6 +25,35 @@ if(isset($_GET['msg']))
 <head>
   <title>Mes vergers</title>
   <?php include('../common/head.php'); ?>
+  
+  <script>
+    //Fonction d'autocomplétion
+    function autocomplete() {
+    var min_length = 0; // min caracters to display the autocomplete
+    var keyword = $('#txt_commune').val();
+    if (keyword.length >= min_length) {
+      $.ajax({
+        url: '../src/atcp_refresh_commune.php',
+        type: 'POST',
+        data: {keyword:keyword},
+        success:function(data){
+          $('#lst_commune').show();
+          $('#lst_commune').html(data);
+        }
+     });
+    } else {
+    $('#lst_commune').hide();
+  }
+}
+
+// set_item : this function will be executed when we select an item
+function set_item(item) {
+  // change input value
+  $('#txt_commune').val(item);
+  // hide proposition list
+  $('#lst_commune').hide();
+}
+  </script>
 </head>
 
 <body>
@@ -59,7 +76,8 @@ if(isset($_GET['msg']))
         un gestionnaire, votre verger apparaîtra dans la liste.
       </p>
 
-      <span style="color:red; font-weight:bold;"><?php echo($message_erreur); ?></span>
+      <!--Affiche du message de succès ou d'erreur-->
+      <?php echo($message); ?>
 
       <?php echo($_SESSION['num_prod']); ?>
 
@@ -83,6 +101,7 @@ if(isset($_GET['msg']))
         <div class="ui-field-contain">
           <label for="txt_commune">Commune :</label>
           <input type="text" name="txt_commune" id="txt_commune" onkeyup="autocomplete()" placeholder="Grenoble">
+          <ul id="lst_commune"></ul>
         </div>
 
         <ul data-role="listview" id="lst_commune">

@@ -23,7 +23,7 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 			try
 			{
 				$sql->execute();
-				header('location: ../interface/gerer_verger.php?verger='.$_POST['id_verger']);
+				header('location: ../interface/gerer_verger.php?verger='.$_POST['id_verger'].'&msg=s1');
 			}
 			catch(Exception $e)
 			{
@@ -32,17 +32,17 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 		}
 		else
 		{
-			$erreur = 3;
+			$erreur = 'e9';
 		}
 	}
 	else
 	{
-		$erreur = 2;
+		$erreur = 'e1';
 	}
 }
 else
 {
-	$erreur = 1;
+	$erreur = 'e1';
 }
 
 
