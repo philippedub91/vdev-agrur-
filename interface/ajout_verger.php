@@ -4,13 +4,6 @@ session_start();
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
-//Importe le fichier de fonctions
-include('../src/fonctions_traitement.php');
-
-sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
-
-
-
 //Gestion des messages d'erreur
 $message = '';
 if(isset($_GET['msg']))

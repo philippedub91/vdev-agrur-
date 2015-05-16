@@ -15,7 +15,7 @@ if(isset($_POST['lst_calibre']))
 		{
 			if(isset($_POST['lst_type_produit']))
 			{
-				//Prépare la requête
+				//Prépare la requête d'ajout du lot
 				$sql = $connexion->prepare('INSERT INTO lot_production(calibre, type_produit, poids) VALUES(:calibre, :type_produit, :poids)');
 				$sql->bindParam(':calibre', $_POST['lst_calibre']);
 				$sql->bindParam(':type_produit', $_POST['lst_type_produit'] );
@@ -29,18 +29,32 @@ if(isset($_POST['lst_calibre']))
 					$sql = $connexion->query('SELECT MAX(id_lot) AS max FROM lot_production');
 					$donnees_lot = $sql->fetch();
 
-
 					//Créé le lien en le lot et la livraison dans la table composer
 					$sql = $connexion->prepare('INSERT INTO composer(id_lot, id_livraison, quantite) VALUES(:id_lot, :id_livraison, :quantite)');
 					$sql->bindParam(':id_lot', $donnees_lot['max']);
 					$sql->bindParam(':id_livraison', $_POST['hd_livraison']);
 					$sql->bindParam(':quantite', $_POST['sld_quantite']);
+					try
+					{
+						$sql->execute();
 
-
-					//Retire la quantité du lot à la quantité de la livraison
-					$sql = $connexion->prepare('UPDATE livraison SET poids = (poids - :quantite) WHERE id_livraison = :id_livraison');
-					$sql->bindParam(':quantite', $_POST['sld_quantite']);
-					$sql->bindParam(':id_livraison', $_POST['hd_livraison']);
+						//Retire la quantité du lot à la quantité de la livraison
+						$sql = $connexion->prepare('UPDATE livraison SET poids = (poids - :quantite) WHERE id_livraison = :id_livraison');
+						$sql->bindParam(':quantite', $_POST['sld_quantite']);
+						$sql->bindParam(':id_livraison', $_POST['hd_livraison']);
+						try
+						{
+							$sql->execute();
+						}
+						catch(Exception $e)
+						{
+							echo('Erreur : '.$e->getMessage());
+						}
+					}
+					catch(Exception $e)
+					{
+						echo('Erreur : '.$e->getMessage());
+					}
 				}
 				catch(Exception $e)
 				{

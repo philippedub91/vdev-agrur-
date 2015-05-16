@@ -1257,7 +1257,7 @@ function getPoidsLot($id_lot)
   $poids = NULL;
 
   $sql = $connexion->prepare('SELECT poids FROM lot_production WHERE id_lot = :id_lot');
-  $sql->bindParam(':id_lot', $_GET['lot']);
+  $sql->bindParam(':id_lot', $id_lot);
   try
   {
     $sql->execute();

@@ -56,6 +56,7 @@ if(isset($_GET['msg']))
           $sql->execute();
           while($donnees_livraison = $sql->fetch())
           {
+            $id_livraison = $donnees_livraison['id_livraison'];
           ?>
             <li>
              <table>
@@ -81,9 +82,8 @@ if(isset($_GET['msg']))
                 </tr>
                 <tr>
                   <td><a href="creer_lot_gestionnaire.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Créer des lots</a></td>
-                  <?php //condition ?>
-                  <td><a href="liste_lot_livraison.php?livraison=<?php echo($donnees_livraison['id_livraison']); ?>" class="ui-btn ui-corner-all">Voir les lots de cette livraison</a></td>
-                  <td><a href="#" class="ui-btn ui-corner-all"><img src="../images/icones/pdf.png" title="Editer un PDF" height="50"></a></td>
+                  <td><a href="liste_lot_livraison.php?livraison=<?php echo($id_livraison); ?>" class="ui-btn ui-corner-all">Voir les lots de cette livraison</a></td>
+                  <td><a href="../src/src_creer_pdf.php?livraison=<?php echo($id_livraison); ?>" class="ui-btn ui-corner-all"><img src="../images/icones/pdf.png" title="Editer un PDF" height="50"></a></td>
                 </tr>
               </table>
             </li>

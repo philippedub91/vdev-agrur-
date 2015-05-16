@@ -68,10 +68,10 @@ if(isset($_GET['msg']))
                 </tr>
                 <tr>
                   <td><b>Poids :</b></td>
-                  <td><?php echo($donnees_lot['poids'].' Kg'); ?></td>
+                  <td><?php echo(getPoidsLot($donnees_lot['id_lot'])); ?> Kg</td>
                 </tr>
                 <tr>
-                  <td><b>Livraison :</b></td>
+                  <td><b>Code livraison :</b></td>
                   <td><?php echo($donnees_lot['id_livraison']); ?></td>
                 </tr>
               </table>
