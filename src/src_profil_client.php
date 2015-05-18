@@ -32,7 +32,7 @@ if(isset($_POST['txt_nom_client']) && !empty($_POST['txt_nom_client']))
 			}
 			catch(Exception $e)
 			{
-				echo('Erreur : '.$e->getMessage());
+				$erreur = 'Modification du profil impossible : '.$e->getMessage();
 			}
 
 			//Modification du mot de passe
@@ -54,33 +54,33 @@ if(isset($_POST['txt_nom_client']) && !empty($_POST['txt_nom_client']))
 						}
 						catch(Exception $e)
 						{
-							echo('Erreur : '.$e->getMessage());
+							$erreur = ('Modification du mot de passe impossible : '.$e->getMessage());
 						}
 					}
 					else
 					{
-						$erreur = 'e10';
+						$erreur = 'Les deux mot de passe saisis ne correspondent pas.';
 					}
 				}
 				else
 				{
-					$erreur = 'e11';
+					$erreur = 'Le mot de passe doit être saisi deux fois.';
 				}
 			}
 		}
 		else
 		{
-			$erreur = 'e1';
+			$erreur = 'Le nom du responsable ne semble pas saisi.';
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'L\'adresse du client ne semble pas renseignée.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le nom du client ne semble pas renseigné';
 }
 
 
@@ -89,9 +89,10 @@ else
 //Redirection vers la page de gestion des variétés
 if(isset($erreur))
 {
-	header('location: ../interface/profil_client.php?msg='.$erreur);
+	//Une erreur a été rencontrée
+	header('location: ../interface/profil_client.php?err='.$erreur);
 }
 else
 {
-	header('location: ../interface/profil_client.php?msg=s1');
+	header('location: ../interface/profil_client.php?msg=Modifications enregistrées !');
 }

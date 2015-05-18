@@ -9,6 +9,22 @@ sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
+##############
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
+
+##############
+
 //Vérifie si l'utilisateur est connecté et producteur
 if(!isset($_SESSION['type']))
 {
@@ -18,6 +34,8 @@ elseif($_SESSION['type'] != 'client')
 {
   header('location: index.php');
 }
+
+#############
 
 //Récupère les informations du client pour les afficher dans les champs du formulaire
 $sql = $connexion->prepare('SELECT * FROM client WHERE num_client = :num_client');
@@ -30,15 +48,6 @@ try
 catch(Exception $e)
 {
   echo('Erreur : '.$e->getMessage());
-}
-
-
-
-//Gestion des messages d'erreur
-$message = '';
-if(isset($_GET['msg']))
-{
-  $message = affiMessage($_GET['msg']);
 }
 ?>
 
@@ -68,8 +77,11 @@ if(isset($_GET['msg']))
       </p>
 
      <!--Affichage du message d'erreur ou de succès-->
+     <?php echo($erreur); ?>
      <?php echo($message); ?>
+     <!--Fin messages-->
 
+     <!--Formulaire de gestion des informations personnelles-->
       <form method="POST" action="../src/src_profil_client.php" data-ajax="false">
         <div class="ui-corner-all custom-corners">
           <div class="ui-bar ui-bar-c">
@@ -113,6 +125,8 @@ if(isset($_GET['msg']))
         <input type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b" value="Enregistrer les modifications">
       
       </form>
+      <!--Fin formulaire-->
+
     </div>
   </div>
 </body>

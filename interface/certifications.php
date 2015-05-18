@@ -10,11 +10,16 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-//Gestion des messages d'erreur
-$message = '';
-if(isset($_GET['msg']))
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']);
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
 }
 ?>
 
@@ -53,7 +58,9 @@ if(isset($_GET['msg']))
       </p>
 
       <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
       <!--Affiche la liste des certifications-->
       <ul data-role="listview" data-filter="true" data-filter-placeholder="Chercher une certification" data-inset="true">
@@ -64,6 +71,7 @@ if(isset($_GET['msg']))
 
         ?>
       </ul>
+      <!--Fin liste-->
 
       <!--Fenêtre modale d'ajout de certification-->
       <div data-role="popup" id="popupAjouter" data-theme="c" class="ui-corner-all">
@@ -79,6 +87,7 @@ if(isset($_GET['msg']))
           </form>
         </div>
       </div>
+      <!--Fin fenêtre modale-->
 
     </div>
   </div>

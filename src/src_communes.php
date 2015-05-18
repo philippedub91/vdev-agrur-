@@ -20,7 +20,7 @@ if(isset($_POST['ckbAjouter']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'L\'ajout du label a échoué : '.$e->getMessage();
 		}
 	}
 }
@@ -41,7 +41,7 @@ if(isset($_POST['ckbRetirer']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'La suppression du label a échoué : '.$e->getMessage();
 		}
 	}
 }
@@ -53,4 +53,12 @@ if(isset($sql))
 }
 
 //Redirection vers la page de gestion des variétés
-header('location: ../interface/communes.php?msg=s1');
+if(isset($erreur))
+{
+	//On erreur a été rencontrée
+	header('location: ../interface/communes.php?err='.$erreur);
+}
+else
+{
+	header('location: ../interface/communes.php?msg=Opérations réalisées avec succès !');
+}

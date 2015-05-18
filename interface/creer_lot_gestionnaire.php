@@ -14,12 +14,16 @@ if(!isset($_GET['livraison']))
 }
 
 //Gestion des messages de succès et d'erreur
-$message = ''; //Initialise message
-
-if(isset($_GET['msg']))
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']);
-} 
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
 ?>
 
 
@@ -51,7 +55,9 @@ if(isset($_GET['msg']))
       </p>
 
       <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
       <div class="ui-corner-all custom-corners">
         <div class="ui-bar ui-bar-c">
@@ -62,6 +68,7 @@ if(isset($_GET['msg']))
             <label>Calibre :</label>
             <?php listeCalibre('lst_calibre'); //Fonction qui crée une liste de noix ?>
 
+            <!--Liste type produit-->
             <label>Type produit:</label>
             <select name="lst_type_produit">
               <?php
@@ -74,10 +81,13 @@ if(isset($_GET['msg']))
               }
               ?>
             </select>
+            <!--Fin liste-->
 
+            <!--Slider quantité-->
             <label for="sld_quantite">Quantité :</label>
             <input type="range" name="sld_quantite" value="60" min="0" max="1000" step="50" data-highlight="true">
-
+            <!--Fin slider-->
+            
             <input type="hidden" name="hd_livraison" value="<?php echo($_GET['livraison']); ?>">
           
             <input type="submit" class="ui-btn ui-shadow" value="Créer le lot">

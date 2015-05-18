@@ -8,6 +8,20 @@ include('../src/bdd_connect.php');
 include('../src/fonctions_traitement.php');
 
 sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
+
+##########
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
 ?>
 
 
@@ -35,6 +49,11 @@ sessionVerif('CLI'); //Vérifie les autorisations de l'utilisateur
     		Sélectionnez un lot de production à partir duquel vous souhaitez réaliser
     		une commande.
     	</p>
+
+      <!--Affichage des messages de succes et d'erreur-->
+      <?php echo($erreur); ?>
+      <?php echo($message); ?>
+      <!--Fin messages-->
 
     	<?php
     	$sql = $connexion->query('SELECT * FROM  lot_production');

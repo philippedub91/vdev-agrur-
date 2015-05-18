@@ -3,6 +3,70 @@ session_start();
 
 //Importe le fichier de fonctions
 include('../src/fonctions_traitement.php');
+
+//Importe la connexion à la base de données
+include('../src/bdd_connect.php');
+
+//Récupère les informations du verger
+if(isset($_GET['verger']) && is_numeric($_GET['verger']))
+{
+  $sql = $connexion->prepare('SELECT * FROM verger WHERE id_verger = :id_verger');
+  $sql->bindParam(':id_verger', $_GET['verger']);
+  try
+  {
+    $sql->execute();
+    $donnees_verger = $sql->fetch();
+
+    //Récupère le nom de la ville où se situe le verger
+    $sql = $connexion->prepare('SELECT nom_commune FROM commune WHERE id_commune = :id_commune');
+    $sql->bindParam(':id_commune', $donnees_verger['id_commune']);
+    try
+    {
+      $sql->execute();
+      $donnees_commune = $sql->fetch();
+    }
+    catch(Exception $e)
+    {
+      header('location: vergers_producteur.php?err=Erreur rencontrée : Impossible d\'afficher le verger');
+    }
+
+    //Récupère le nom de la variété cultivée
+    $sql = $connexion->prepare('SELECT libelle_variete FROM variete WHERE id_variete = :id_variete');
+    $sql->bindParam(':id_variete', $donnees_verger['id_variete']);
+    try
+    {
+      $sql->execute();
+      $donnees_variete = $sql->fetch();
+    }
+    catch(Exception $e)
+    {
+      header('location: vergers_producteur.php?err=Erreur rencontrée : Impossible d\'afficher le verger');
+    }
+
+  }
+  catch(Exception $e)
+  {
+    header('location: vergers_producteur.php?err=BeeYoop BeeDeepBoom Weeop DEEpaEEya - Erreur liée à la base de données');
+  }
+}
+else
+{
+  header('location: vergers_producteur.php?err=Le verger n\'a pas été renseigné. Vous avez été redigiré(e).');
+}
+
+##############
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['suc']))
+{
+  $message = addDecorum($_GET['suc'], 'SUC'); 
+}
 ?>
 
 
@@ -12,65 +76,6 @@ include('../src/fonctions_traitement.php');
   <title>Mes vergers</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
-
-  <?php
-
-  //Récupère les informations du verger
-  if(isset($_GET['verger']) && is_numeric($_GET['verger']))
-  {
-    $sql = $connexion->prepare('SELECT * FROM verger WHERE id_verger = :id_verger');
-    $sql->bindParam(':id_verger', $_GET['verger']);
-    try
-    {
-      $sql->execute();
-      $donnees_verger = $sql->fetch();
-    }
-    catch(Exception $e)
-    {
-      header('location: vergers_producteur.php');
-    }
-  }
-  else
-  {
-    header('location: vergers_producteur.php');
-  }
-
-
-  //Récupère le nom de la ville où se situe le verger
-  $sql = $connexion->prepare('SELECT nom_commune FROM commune WHERE id_commune = :id_commune');
-  $sql->bindParam(':id_commune', $donnees_verger['id_commune']);
-  try
-  {
-    $sql->execute();
-    $donnees_commune = $sql->fetch();
-  }
-  catch(Exception $e)
-  {
-    echo('Erreur : '.$e->getMessage());
-  }
-
-  //Récupère le nom de la variété cultivée
-  $sql = $connexion->prepare('SELECT libelle_variete FROM variete WHERE id_variete = :id_variete');
-  $sql->bindParam(':id_variete', $donnees_verger['id_variete']);
-  try
-  {
-    $sql->execute();
-    $donnees_variete = $sql->fetch();
-  }
-  catch(Exception $e)
-  {
-    echo('Erreur : '.$e->getMessage());
-  }
-
-
-  //Gestion du message d'erreur
-  $erreur = '';
-
-  if(isset($_GET['msg']))
-  {
-    $message = affiMessage($_GET['msg']));
-  }
-  ?>
 </head>
 
 <body>
@@ -152,6 +157,7 @@ include('../src/fonctions_traitement.php');
           </form>
         </div>
       </div>
+      <!--Fin fenêtre-->
 
       <!--Fenêtre permettant de supprimer le verger-->
       <div data-role="popup" id="popupSupprimer" data-overlay-theme="b" data-theme="c" data-dismissible="false" style="max-width:400px;">
@@ -165,6 +171,7 @@ include('../src/fonctions_traitement.php');
           <a href="../src/src_supprimer_verger.php?verger=<?php echo($donnees_verger['id_verger']); ?>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-transition="flow">Supprimer</a>
         </div>
       </div>
+      <!--Fin fenêtre-->
       
     </div>
   </div>

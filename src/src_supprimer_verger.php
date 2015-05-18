@@ -14,7 +14,7 @@ if(isset($_GET['verger']) && is_numeric($_GET['verger']))
 		$sql->execute();
 		$donnees_verger = $sql->fetch();
 
-		if($donnees_verger['num_prod'] == $_SESSION['num_prod'] || $_SESSION['type'] == 'gestionnaire')
+		if($donnees_verger['num_prod'] == $_SESSION['num_prod'] || $_SESSION['type'] == 'GEST')
 		{
 			$sql = $connexion->prepare('DELETE FROM verger WHERE id_verger = :id_verger');
 			$sql->bindParam(':id_verger', $_GET['verger']);
@@ -24,28 +24,34 @@ if(isset($_GET['verger']) && is_numeric($_GET['verger']))
 			}
 			catch(Exception $e)
 			{
-				echo('Erreur : '.$e->getMessage());
+				$erreur = 'La suppression du verger à échouée : '.$e->getMessage();
 			}
 
-			header('location: ../interface/vergers_producteur.php');
 		}
 		else
 		{
-			header('location: ../interface/vergers_producteur.php');
+			$erreur = 'Vous ne pouvez supprimer que les vergers qui vous appartiennent';
 		}
 	}
 	catch(Exception $e)
 	{
-		echo('Erreur : '.$e->getMessage());
+		$erreur = 'La tentative a échouée en raison d\'une erreur liée à la base de données.';
 	}
 }
 else
 {
-	header('location: ../interface/vergers_producteur.php');
+	$erreur = 'La suppression a échouée.'
 }
 
 
-header('location: ../interface/vergers_producteur.php?msg=s1');
+if(isset($erreur))
+{
+	header('location: ../interface/vergers_producteur.php?err='.$erreur);
+}
+else
+{
+	header('location: ../interface/vergers_producteur.php?msg=Le verger a bien été supprimé')
+}
 
 
 

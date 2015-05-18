@@ -16,7 +16,7 @@ if(isset($_POST['lst_utilisateurs']) && !empty($_POST['lst_utilisateurs']))
 	}
 	catch(Exception $e)
 	{
-		echo('Erreur : '.$e->getMessage());
+		header('location: ../interface/producteurs.php?err=L\'opération à échouée : '.$e->getMessage());
 	}
 
 	//Ajout de l'identifiant (token) dans la table producteur
@@ -28,11 +28,11 @@ if(isset($_POST['lst_utilisateurs']) && !empty($_POST['lst_utilisateurs']))
 	}
 	catch(Exception $e)
 	{
-		echo('Erreur : '.$e->getMessage());
+		header('location: ../interface/producteurs.php?err=L\'opération à échouée : '.$e->getMessage());
 	}
 }
 
 $sql->closeCursor(); //Ferme l'objet PDO
 
 //Redirection vers la page de gestion des variétés
-header('location: ../interface/producteurs.php?msg=s1');
+header('location: ../interface/producteurs.php?msg=Modifications enregistrées avec succès !');

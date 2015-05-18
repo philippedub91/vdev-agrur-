@@ -22,27 +22,32 @@ if(isset($_POST['txt_conditionnement']) && !empty($_POST['txt_conditionnement'])
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'L\'opération à échouée : '.$e->getMessage());
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'Le poids n\'est pas correctement renseigné');
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le libellé du conditionnement ne semble pas renseigné')
 }
 
 
-//Redirige vers l'interface
-if(isset($erreur)) //Une erreur de saisie a été rencontrée
+//Redirection de l'utilisateur 
+if(isset($erreur))
 {
-	header('location: ../interface/conditionnements.php?msg='.$erreur);
+	//Une erreur a été rencontrée, on affiche un message contenant l'erreur
+	header('location: ../interface/conditionnements.php?err='.$erreur);
 }
 else
 {
-	header('location: ../interface/conditionnements.php?msg=s1');
+	//L'opération a réussie
+	header('location: ../interface/conditionnements.php?msg=Opération réalisée avec succès !');
 }
-?>
+
+
+
+

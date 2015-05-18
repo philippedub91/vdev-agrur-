@@ -6,10 +6,18 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-$message = '';
-if(isset($_GET['msg']))
+###########
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']); 
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
 }
 ?>
 
@@ -38,6 +46,11 @@ if(isset($_GET['msg']))
           Voici la liste des différentes variétés cultivées par les producteurs de la 
           coopérative.
         </p>
+
+        <!--Messages d'erreur et de succès-->
+        <?php echo($erreur); ?>
+        <?php echo($message); ?>
+        <!--Fin messages-->
 
         <!--Liste des variétés-->
         <div class="ui-corner-all custom-corners">

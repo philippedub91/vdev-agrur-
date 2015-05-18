@@ -36,31 +36,31 @@ if(isset($_POST['lst_conditionnement']) && isset($_POST['nb_quantite']) && isset
 			}
 			catch(Exception $e)
 			{
-				echo('Erreur : '.$e->getMessage());
+				$erreur = 'La commande n\'a pas été réalisée : '.$e->getMessage();
 			}
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'La commande n\'a pas été réalisée : '.$e->getMessage();
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'Certains champs semblent vides.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Certains champs semblent ne pas avoir été saisis.';
 }
 
 //Redirection
 if(isset($erreur))
 {
-	header('location: ../interface/commander.php?msg='.$erreur);
+	header('location: ../interface/commander.php?err='.$erreur);
 }
 else
 {
-	header('location: ../interface/espace_client.php?msg=s2');
+	header('location: ../interface/espace_client.php?msg=Votre commande a bien été enregistrée. Merci de votre confiance !');
 }
 ?>

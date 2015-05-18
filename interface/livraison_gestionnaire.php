@@ -6,13 +6,19 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-//Gestion des messages d'erreur ou de succès:
-$message = ''; //Initialise message
+#############
 
-if(isset($_GET['msg']))
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']); 
-} 
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
 ?>
 
 
@@ -44,8 +50,11 @@ if(isset($_GET['msg']))
       </p>
 
       <!--Affichage du message d'erreur ou de succès-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
+      <!--Liste livraisons-->
       <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
         <li data-role="list-divider">Livraisons</li>
         <?php
@@ -96,6 +105,7 @@ if(isset($_GET['msg']))
       }
       ?>
     </ul>
+    <!--Fin liste-->
 
     </div>
   </div>

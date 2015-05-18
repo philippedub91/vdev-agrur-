@@ -6,11 +6,21 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
+#############
+
 //Gestion des messages de succès et d'erreur
-if(isset($_GET['msg']))
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']);
+  $erreur = addDecorum($_GET['err'], 'ERR');
 }
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
+
+#########
 
 //Redirige vers la liste des producteurs si la variable
 //d'adresse $_GET['prod'] n'existe pas.
@@ -47,7 +57,9 @@ if(!isset($_GET['prod']))
       </p>
 
       <!--Affichage d'un message d'erreur ou de succès-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
       <!--Informations personnelles-->
       <div class="ui-corner-all custom-corners">

@@ -6,25 +6,18 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-//Gestion des message d'erreur
-$msg = '';
+##############
 
-if(isset($_GET['msg']) && !empty($_GET['msg']))
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  switch($_GET['msg'])
-  {
-    case 1:
-      $msg = '<span style="color:red;">Certains ne champs ne semblent pas saisis correctement.</span>';
-    break;
-    case 2:
-      $msg = '<span style="color:red;">Une erreur interne (connexion à la base de données) empêche la réalisation de l\'opération.</span>';
-    break;
-    case 'ok':
-      $msg = '<span style="color:green;">L\'utilisateur a été ajouté avec succès !</span>';
-    break;
-    default:
-    break;
-  }
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
 }
 ?>
 
@@ -50,8 +43,12 @@ if(isset($_GET['msg']) && !empty($_GET['msg']))
     <div class="sub-container">
       <h4 style="margin-left:10px; margin-right:10px;">Bienvenue dans votre espace personnel <?php echo($_SESSION['prenom']); ?> ! </h4>
 
-      <?php echo($msg); ?>
+      <!--Affichage des messages de succès et d'erreur-->
+      <?php echo($erreur); ?>
+      <?php echo($message); ?>
+      <!--Fin messages-->
 
+      <!--Début menu-->
       <div data-role="controlgroup">
         <a href="producteurs.php" class="ui-btn ui-corner-all"><img src="../images/icones/producteur.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle;">Producteurs</span></a>
         <a href="clients.php" class="ui-btn ui-corner-all"><img src="../images/icones/client.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle;">Clients</span></a>
@@ -63,9 +60,12 @@ if(isset($_GET['msg']) && !empty($_GET['msg']))
         <a href="certifications.php" class="ui-btn ui-corner-all"><img src="../images/icones/certificat.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle">Certifications</span></a>
         <a href="../src/session_destroy.php" class="ui-btn ui-corner-all"><img src="../images/icones/deconnexion.png" height="50" style="margin-right:10px; float:left;" align="absmiddle"><span style="float:middle;">Déconnexion</span></a>
       </div>
+      <!--Fin menu-->
 
+      <!--Fenêtre d'ajout d'utilisateur-->
       <div data-role="popup" id="popupAjouterUtilisateur" data-theme="c" class="ui-corner-all">
-        
+
+      <!--Formulaire d'ajout d'utilisateur-->
         <form method="post" action="../src/src_ajouter_utilisateur.php" data-ajax="false">
           <div style="padding:15px; width:300px;">
             <h3>Ajouter un utilisateur</h3>
@@ -97,8 +97,10 @@ if(isset($_GET['msg']) && !empty($_GET['msg']))
             <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Valider</button>
           </div>
         </form>
+        <!--Fin formulaire-->
 
       </div>
+      <!--Fin fenêtre-->
 
     </div>
   </div>

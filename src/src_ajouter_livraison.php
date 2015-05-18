@@ -10,7 +10,7 @@ if(isset($_POST['txt_date_livraison']) && !empty($_POST['txt_date_livraison']))
 	{
 		if(isset($_POST['lst_type_produit']) && !empty($_POST['lst_type_produit']))
 		{
-			if(isset($_POST['txt_quantite']) && !empty($_POST['txt_quantite']))
+			if(isset($_POST['txt_quantite']) && !empty($_POST['txt_quantite']) && is_numeric($_POST['txt_quantite']))
 			{
 				$sql = $connexion->prepare('INSERT INTO livraison(date_livraison, num_prod, poids, type, id_verger) VALUES(:date_livraison, :num_prod, :poids, :type, :id_verger)');
 				$sql->bindParam(':date_livraison', $_POST['txt_date_livraison']);
@@ -24,28 +24,37 @@ if(isset($_POST['txt_date_livraison']) && !empty($_POST['txt_date_livraison']))
 				}
 				catch(Exception $e)
 				{
-					echo('Erreur : '.$e->getMessage());
+					$erreur = 'Ajout impossible, il y a une erreur : '.$e->getMessage();
 				}
-
-				header('location: ../interface/livraison_producteur.php?msg=s1');
 			}
 			else
 			{
-				$erreur = 'e1';
+				$erreur = 'La quantité ne semble pas correctement renseignée.';
 			}
 		}
 		else
 		{
-			$erreur = 'e1';
+			$erreur = 'Le type de produit ne semble pas renseigné.';
 		}
  	}
  	else
  	{
- 		$erreur = 'e1';
+ 		$erreur = 'Le verger ne semble pas renseigné.';
  	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'La date de livraison ne semble pas renseignée.';
 }
-header('location: ../interface/livraison_producteur.php?msg='.$erreur);
+
+//Redirection
+if(isset($erreur))
+{
+	//Une erreur a été rencontrée, on affiche un message
+	header('location: ../interface/livraison_producteur.php?err='.$erreur);
+}
+else
+{
+	header('location: ../interface/livraison_producteur.php?msg=La livraison a bien été ajoutée !');
+}
+

@@ -4,31 +4,47 @@ session_start();
 //Importe le fichier de fonctions
 include('../src/fonctions_traitement.php');
 
-sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
-
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
-//Récupère les informations du client pour les afficher dans les champs du formulaire
-$sql = $connexion->prepare('SELECT * FROM client WHERE num_client = :num_client');
-$sql->bindParam(':num_client', $_GET['client']);
-try
+sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
+################
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $sql->execute();
-  $donnees_client = $sql->fetch();
+  $erreur = addDecorum($_GET['err'], 'ERR');
 }
-catch(Exception $e)
+elseif(isset($_GET['msg']))
 {
-  echo('Erreur : '.$e->getMessage());
+  $message = addDecorum($_GET['msg'], 'SUC'); 
 }
 
+################
 
-
-//Gestion de succès et d'erreur
-$message = '';
-if(isset($_GET['msg']))
+//Si le client est renseigné dans l'adresse
+if(isset($_GET['client']))
 {
-  $message = affiMessage($_GET['msg']);
+  //Récupère les informations du client pour les afficher dans les champs du formulaire
+  $sql = $connexion->prepare('SELECT * FROM client WHERE num_client = :num_client');
+  $sql->bindParam(':num_client', $_GET['client']);
+  try
+  {
+    $sql->execute();
+    $donnees_client = $sql->fetch();
+  }
+  catch(Exception $e)
+  {
+    echo('Erreur : '.$e->getMessage());
+  }
+}
+else //Si le client n'est pas renseigné dans l'adresse
+{
+  //Redirige l'utilisateur vers son espace personnel
+  header('location: espace_gestionnaire.php?err=Impossible de charger les informations utilisateur');
 }
 ?>
 
@@ -58,7 +74,9 @@ if(isset($_GET['msg']))
       </p>
 
      <!--Affichage d'un message de succès ou d'erreur-->
+     <?php echo($erreur); ?>
      <?php echo($message); ?>
+     <!--Fin messages-->
 
      <div class="ui-corner-all custom-corners">
      	<div class="ui-bar ui-bar-c">

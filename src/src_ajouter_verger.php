@@ -54,34 +54,43 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 					}
 					catch(Exception $e)
 					{
-						echo('Erreur : '.$e->getMessage());
+						$erreur = 'L\'ajout du verger a échoué : '.$e->getMessage();
 					}
 
 					header('location: ../interface/vergers_producteur.php?msg=s1');
 				}
 				else
 				{
-					$erreur = 'e1';
+					$erreur = 'La variété ne semble pas renseignée.';
 				}
 			}
 			else
 			{
-				$erreur = 'e1';
+				$erreur = 'La commune ne semble pas renseignée.';
 			}
 		}
 		else
 		{
-			$erreur = 'e1';
+			$erreur = 'Le nombre d\'arbres ne semble pas renseigné.';
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'La superficie ne semble pas renseignée.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le nom du verger ne semble pas renseigné.';
 }
 
-header('location: ../interface/ajout_verger.php?msg='.$erreur); 
+//Redirection de l'utilisateur
+if(isset($erreur))
+{
+	//Il y a une erreur, on affiche un message
+	header('location: ../interface/ajout_verger.php?err='.$erreur); 
+}
+else
+{
+	header('location: ../interface/ajout_verger.php?msg=Le verger a bien été ajouté !');
+}

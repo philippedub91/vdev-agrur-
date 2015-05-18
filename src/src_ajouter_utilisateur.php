@@ -61,49 +61,49 @@ if(isset($_POST['txt_nom']) && !empty($_POST['txt_nom']))
 							}
 							catch(Exception $e)
 							{
-								$erreur = 'e6'; //Erreur interne(base de données)
+								$erreur = 'L\'utilisateur n\'a pu être ajouté : '.$e->getMessage(); //Erreur interne(base de données)
 							}
 						} 
 					}
 					catch(Exception $e)
 					{
-						$erreur = 'e6'; //Erreur interne (base de données)
+						$erreur = 'L\'utilisateur n\'a pu être ajouté : '.$e->getMessage(); //Erreur interne (base de données)
 					}
 				}
 				else
 				{
-					$erreur = 'e6'; //Erreur de saisie
+					$erreur = 'Le type de compte ne semble pas renseigné.'; //Erreur de saisie
 				}
 			}
 			else
 			{
-				$erreur = 'e1'; //Erreur de saisie
+				$erreur = 'Le mot de passe ne semble pas renseigné.'; //Erreur de saisie
 			}
 		}
 		else
 		{
-			$erreur = 'e1'; //Erreur de saisie
+			$erreur = 'L\'adresse mail ne semble pas renseignée.'; //Erreur de saisie
 		}
 	}
 	else
 	{
-		$erreur = 'e1'; //Erreur de saisie
+		$erreur = 'Le prénom ne semble pas renseigné.'; //Erreur de saisie
 	}
 }
 else
 {
-	$erreur = 'e1'; //Erreur de saisie
+	$erreur = 'Le nom ne semble pas renseigné.'; //Erreur de saisie
 }
 
 
 //Redirection de l'utilisateur
 if(isset($erreur)) //La création du compte à échouée
 {
-	header('location: ../interface/espace_gestionnaire.php?msg='.$erreur);
+	header('location: ../interface/espace_gestionnaire.php?err='.$erreur);
 }
 else //La création du compte à réussie.
 {
-	header('location: ../interface/espace_gestionnaire.php?msg=s1');
+	header('location: ../interface/espace_gestionnaire.php?msg=Utilisateur ajouté avec succès ! On a une nouvelle recrue !');
 }
 
 

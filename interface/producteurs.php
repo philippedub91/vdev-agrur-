@@ -5,6 +5,21 @@ session_start();
 include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
+
+#############
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
+
 ?>
 
 
@@ -32,6 +47,10 @@ sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
   		<p>
   			Cette liste, présente tous les producteurs membres de la coopérative.
   		</p>
+
+      <?php echo($erreur); ?>
+      <?php echo($message); ?>
+      
   		
 		<ul data-role="listview" data-filter="true" data-filter-placeholder="Rechercher un producteur" data-inset="true">
 			<?php afficherProducteurs(); ?>

@@ -4,12 +4,24 @@ session_start();
 //Importe la connexion à la base de données
 include('../src/bdd_connect.php');
 
-//Gestion des messages d'erreur
-$message = '';
-if(isset($_GET['msg']))
+//Importe le fichier de fonctions
+include('../src/fonctions_traitement.php');
+
+sessionVerif('PROD'); //Vérifie les autorisations de l'utilisateur
+
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']);
+  $erreur = addDecorum($_GET['err'], 'ERR');
 }
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); //
+}
+
 ?>
 
 
@@ -70,9 +82,10 @@ function set_item(item) {
       </p>
 
       <!--Affiche du message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--fin message-->
 
-      <?php echo($_SESSION['num_prod']); ?>
 
       <!--Formulaire permettant d'ajouter un verger-->
       <form method="post" action="../src/src_ajouter_verger.php" data-ajax="false">
@@ -97,10 +110,6 @@ function set_item(item) {
           <ul id="lst_commune"></ul>
         </div>
 
-        <ul data-role="listview" id="lst_commune">
-          <!--vide-->
-        </ul>
-
         <div class="ui-field-contain">
           <label for="txt_variete">Variété :</label>
           <input type="text" name="txt_variete" placeholder="Franquette">  
@@ -111,6 +120,8 @@ function set_item(item) {
           <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-c" data-rel="back">Annuler</a>
         </div>
       </form>
+      <!--Fin formulaire-->
+
     </div>
   </div>
 </body>

@@ -47,34 +47,34 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 					}
 					catch(Exception $e)
 					{
-						echo('Erreur : '.$e->getMessage());
+						$erreur = 'L\'ajout du verger a échoué : '.$e->getMessage();
 					}
 
 					$sql->closeCursor(); //Ferme l'objet PDO
 				}
 				else
 				{
-					$erreur = 'e1'; 
+					$erreur = 'La variété ne semble pas renseignée.'; 
 				}
 			}
 			else
 			{
-				$erreur = 'e1';
+				$erreur = 'La commune ne semble pas renseignée.';
 			}
 		}
 		else
 		{
-			$erreur = 'e1';
+			$erreur = 'Le nombre d\'arbres ne semble pas renseigné.';
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'La superficie ne semble pas renseignée.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le nom du verger ne semble pas renseigné';
 }
 
 
@@ -91,7 +91,7 @@ if(isset($_POST['ckb_supprimer']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'La suppression de certains vergers dont le n° '.$supprimer.' a échouée'.
 		}
 	}
 
@@ -104,9 +104,10 @@ if(isset($_POST['ckb_supprimer']))
 //Redirection vers la page de gestion des variétés
 if(isset($erreur))
 {
+	//Une erreur a été rencontrée, on affiche le message d'erreur
 	header('location: ../interface/vergers_producteur.php?msg='.$erreur);
 }
 else
 {
-	header('location: ../interface/vergers_producteur.php?msg=s1');
+	header('location: ../interface/vergers_producteur.php?msg=Modifications enregistrée avec succès !');
 }

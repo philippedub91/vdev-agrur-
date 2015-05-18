@@ -17,7 +17,7 @@ if(isset($_POST['ckb_supprimer']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'Le poids n\'a pas put $etre supprimé : '.$e->getMessage());
 		}
 	}
 }
@@ -37,9 +37,25 @@ if(isset($_POST['txt_poids']) && !empty($_POST['txt_poids']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'Le poids n\'a pas put être ajouté :'.$e->getMessage());
 		}
 	}
 }
 
-header('location: ../interface/options_conditionnement.php?msg=s1');
+
+//Redirection de l'utilisateur
+if(isset($erreur))
+{
+	//Une erreur a été rencontrée, on affiche un message d'erreur
+	header('location: ../interface/options_conditionnement.php?err='.$erreur);
+}
+else
+{
+	header('location: ../interface/options_conditionnement.php?msg=Les modifications ont été enregistrées avec succès !');
+}
+	
+
+
+
+
+

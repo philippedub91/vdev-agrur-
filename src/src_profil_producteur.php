@@ -36,27 +36,27 @@ if(isset($_POST['txt_adresse_prod']) && !empty($_POST['txt_adresse_prod']))
 				}
 				catch(Exception $e)
 				{
-					echo('Erreur : '.$e->getMessage());
+					$erreur = 'La modifications des données a échouée : '.$e->getMessage();
 				}
 			}
 			else
 			{
-				$erreur = 'e1';
+				$erreur = 'La société ne semble pas renseignée.';
 			}
 		}
 		else
 		{
-			$erreur = 'e1';
+			$erreur = 'Le prénom du représentant ne semble pas renseigné.';
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'Le nom du représentant ne semble pas renseigné.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'L\'adresse du producteur ne semble pas renseignée.';
 }
 
 
@@ -68,5 +68,5 @@ if(isset($erreur))
 }
 else
 {
-	header('location: ../interface/profil_producteur.php?msg=s1');
+	header('location: ../interface/profil_producteur.php?msg=Modifications enregistrées !');
 }

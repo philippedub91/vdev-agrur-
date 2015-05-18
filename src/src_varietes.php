@@ -20,7 +20,7 @@ if(isset($_POST['ckbAjouter']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'L\'opération a échouée : '.$e->getMessage();
 		}
 	}
 }
@@ -41,7 +41,7 @@ if(isset($_POST['ckbRetirer']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'L\'opération a échouée : '.$e->getMessage();
 		}
 	}
 }
@@ -86,5 +86,15 @@ if(isset($_POST['txt_libelle_variete']) && !empty($_POST['txt_libelle_variete'])
 
 $sql->closeCursor(); //Ferme l'objet PDO
 
-//Redirection vers la page de gestion des variétés
-header('location: ../interface/varietes.php?msg=s1');
+
+//Redirection
+if(isset($erreur))
+{
+	//Une erreur a été rencontrée on redirige et on affiche le message
+	header('location: ../interface/varietes.php?err='.$erreur);
+}
+else
+{
+	header('location: ../interface/varietes.php?msg=s1');
+}
+

@@ -37,7 +37,7 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 					//L'utilisateur est client
 					if($donnees_client['compteur'] == 1)
 					{
-						$_SESSION['type'] = 'client';
+						$_SESSION['type'] = 'CLI';
 						$_SESSION['num_client'] = $donnees_client['num_client'];
 					}
 					else //Il n'est pas client, on vérifie s'il est producteur
@@ -52,7 +52,7 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 							//L'utilisateur est client
 							if($donnees_producteur['compteur'] == 1)
 							{
-								$_SESSION['type'] = 'producteur';
+								$_SESSION['type'] = 'PROD';
 								$_SESSION['num_prod'] = $donnees_producteur['num_prod'];
 							}
 							else //Il n'est pas client, on vérifie s'il est gestionnaire
@@ -65,11 +65,11 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 									$donnees_gestionnaire = $sql->fetch();
 									if($donnees_gestionnaire['compteur'] == 1)
 									{
-										$_SESSION['type'] = 'gestionnaire';
+										$_SESSION['type'] = 'GEST';
 									}
 									else
 									{
-										header('location: ../interface/index.php?msg=2'); //Le compte existe mais n'est pas activé
+										header('location: ../interface/index.php?msg=Votre compte existe bien, mais ne semble pas activé. Veuillez contacter l\'administrateur.'); //Le compte existe mais n'est pas activé
 									}
 								}
 								catch(Exception $e)
@@ -91,7 +91,8 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 			}
 			else
 			{
-				header('location: ../interface/index.php?msg=1'); //Le compte n'existe pas
+				//Le compte n'existe pas
+				header('location: ../interface/index.php?err=Les identifiants saisis ne correspondent a aucun utilisateur.');
 			}
 		}
 		catch(Exception $e)
@@ -102,13 +103,13 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 		//Redirection vers l'espace personnel de l'utilisateur
 		switch($_SESSION['type'])
 		{
-			case 'producteur':
+			case 'PROD':
 				header('location: ../interface/espace_producteur.php');
 			break;
-			case 'client':
+			case 'CLI':
 				header('location: ../interface/espace_client.php');
 			break;
-			case 'gestionnaire':
+			case 'GEST':
 				header('location: ../interface/espace_gestionnaire.php');
 			break;
 			default;
@@ -117,10 +118,12 @@ if(isset($_POST['txt_mail']) && !empty($_POST['txt_mail']))
 	}
 	else
 	{
-		header('location: ../interface/index.php?msg=e7'); //Le mot de passe n'est pas saisi
+		//Le mot de passe n'est pas saisi
+		header('location: ../interface/index.php?err=Le champ consacré au mot de passe n\'est pas saisi.'); //Le mot de passe n'est pas saisi
 	}
 }
 else
 {
-	header('location: ../interface/index.php?msg=e8'); //L'adresse mail n'est pas saisie
+	//L'adresse mail n'est pas saisie
+	header('location: ../interface/index.php?err=Le champ consacré à l\'adresse mail n\'est pas saisi.'); //L'adresse mail n'est pas saisie
 }

@@ -6,12 +6,28 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-//Vérifie si l'identifiant du conditionnement
+###############
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
+
+################
+
+//Si l'identifiant du conditionnement
 //n'est pas donné en variable d'adresse.
 if(!isset($_GET['condi']))
 {
   //Redirige vers la page des conditionnements
-  header('location: conditionnements.php');
+  header('location: conditionnements.php?err=Aucun conditionnement renseigné vous avez été redigiré');
 }
 ?>
 
@@ -51,7 +67,9 @@ if(!isset($_GET['condi']))
       <p>Vous pouvez supprimer ce conditionnement en cliquant sur le bouton supprimer</p>
 
       <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
       <ul data-role="listview">
         <li><b>Libelle du conditionnement : </b><?php echo(getLibelleConditionnement($_GET['condi'])); ?></li>
@@ -71,6 +89,8 @@ if(!isset($_GET['condi']))
           <a href="../src/src_supprimer_condi.php?condi=<?php echo($_GET['condi']); ?>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-transition="flow">Supprimer</a>
         </div>
       </div>
+      <!--Fin fenêtre-->
+      
     </div>
   </div>
 </body>

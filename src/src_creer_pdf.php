@@ -35,7 +35,7 @@ if(isset($_GET['livraison']))
 }
 else
 {
-	header('location: ../interface/livraison_gestionnaire.php');
+	header('location: ../interface/livraison_gestionnaire.php?err=Impossible de générer le PDF');
 }
 
 
@@ -146,7 +146,7 @@ else
 	}
 	catch(Exception $e)
 	{
-		echo('Erreur : '.$e);
+		echo('Erreur : '.$e->getMessage());
 	}
 ?>
 

@@ -1373,121 +1373,87 @@ function estAOC($idVerger)
  * @global $_SESSION
  *
  */
-function sessionVerif( $autorisation)
+function sessionVerif($autorisation)
 {
 	global $connexion;
 	global $_SESSION;
 
-	//Vérifie que la variable $_SESSION['token'] existe
-	if(isset($_SESSION['token']))
-	{
-		switch($autorisation)
-		{
 
-			//Sélectionne une requête en fonction du type de compte donné en paramètre
-			case 'PROD': //Producteur
-				$req = 'SELECT count(num_prod) AS compteur FROM producteur WHERE token = :token';
+	//Vérifie que la variable $_SESSION['token'] existe
+	if(isset($_SESSION['type']))
+	{
+		switch($_SESSION['type'])
+		{
+			case 'PROD':
+				//Si l'utilisateur a un compte de type PROD et que l'autorisation
+				//est différente. Il n'a pas le droit d'accèder à cette page,
+				//il est redirigé vers sa page personnelle.
+				if($_SESSION['type'] != $autorisation)
+				{
+					//echo('Vous êtes : '.$_SESSION['type'].' cette page est réservée aux : '.$autorisation);
+					header('location: espace_gestionnaire.php');
+				}
 			break;
-			case 'CLI': //Client
-				$req = 'SELECT count(num_client) AS compteur FROM client WHERE token = :token';
+			case 'CLI':
+				//Si l'utilisateur a un compte de type CLI et que l'autorisation
+				//est différente. Il n'a pas le droit d'accèder à cette page,
+				//il est redirigé vers sa page personnelle.
+				if($_SESSION['type'] != $autorisation)
+				{
+					//echo('Vous êtes : '.$_SESSION['type'].' cette page est réservée aux : '.$autorisation);
+					header('location: espace_client.php');
+				}
 			break;
-			case 'GEST': //Gestionnaire
-				$req = 'SELECT count(num_gestionnaire) AS compteur FROM gestionnaire WHERE token = :token';
+			case 'GEST':
+				//Si l'utilisateur a un compte de type GEST et que l'autorisation
+				//est différente. Il n'a pas le droit d'accèder à cette page,
+				//il est redirigé vers sa page personnelle.
+				if($_SESSION['type'] != $autorisation)
+				{
+					//echo('Vous êtes : '.$_SESSION['type'].' cette page est réservée aux : '.$autorisation);
+					header('location: espace_gestionnaire.php');
+				}
 			break;
 			default:
 			break;
-
-			//Prépare la requête
-			$sql = $connexion->prepare($req);
-			$sql->bindParam(':token', $token);
-			try
-			{
-				//Envoi la requête
-				$sql->execute();
-				$donnees_utilisateur = $sql->fetch();
-
-				if($donnees_utilisateur['compteur'] < 1)
-				{
-					header('location: index.php');
-				}
-			}
-			catch(Exception $e)
-			{
-				echo('Erreur : '.$e->getMessage());
-			}
 		}
 	}
 	else
 	{
-		//Redirige vers la page de connexion
+		//$_SESSION['type'] n'existe pas, l'utilisateur n'est donc pas connecté
+		//on le redirige vers la page de connexion.
 		header('location: ../interface/index.php');
 	}
 }
 
 
 /**
- * Fonction qui retourne un message en fonction du code
- * donné en paramètre
+ * Fonction qui ajoute un style aux messages d'erreur et de
+ * succès.
  *
- * @param string $code : Code du message
+ * @param string $msg : Message à décorer
+ *
+ * @param string $type : Type de message (ERR pour une erreur ou SUC pour un message de succès)
  *
  * @return string $message : Contenu du message
  *
  */
-function affiMessage($code)
+function addDecorum($msg, $type)
 {
 	//Sélectionne un message en fonction du code
-	switch($code)
+	switch($type)
 	{
-		case "e1":
-			$message = "Un ou plusieurs champs n'ont pas été correctement saisis";
+		case 'ERR':
+			$msg_return = '<div class="msg erreur">'.$msg.'</div>'; //Le message s'affichera dans une cadre rouge
 		break;
-		case "e2":
-			$message = "Un des champs saisis ne doit pas contenir de caractères numériques";
-		break;
-		case "e3":
-			$message = "Un des champs saisis ne dois contenir que des caractères alphabétiques";
-		break;
-		case "e4":
-			$message = "Les identifiants saisis ne correspondent à aucun utilisateur";
-		break;
-		case "e5":
-			$message = "Votre compte existe bien, mais n'est pas forcément activé";
-		break;
-		case "e6":
-			$message = "Une erreur interne à l'application a été rencontrée. L'opération n'a put être réalisée";
-		break;
-		case "e7":
-			$message = "Votre mot de passe n'est pas saisi";
-		break;
-		case "e8":
-			$message = "Votre adresse mail n'est pas saisie";
-		break;
-		case "e9":
-			$message = "Le nombre d'arbres sélectionnés est inférieur à zéro";
-		break;
-		case "e10":
-			$message = "Les deux mots de passe saisis sont différents";
-		break;
-		case "e11":
-			$message = "Vous n'avez pas confirmé le mot de passe";
-		break;
-		case "s1":
-			$message = "L'opération a été réalisée avec succès";
-		break;
-		case "s2":
-			$message = "Votre commande a bien été enregistrée";
-		break;
-		case "s3":
-			$message = "Votre commande a bien été supprimée";
+		case 'SUC':
+			$msg_return = '<div class="msg succes">'.$msg.'</div>'; //Le message s'affichera dans un cadre vert
 		break;
 		default:
-			$message = '';
+			$msg_return = ''; //Le message ne s'affichera pas
 		break;
-
-		$message = 'connard de merde';
-
-		return $message;
 	}
+
+	return $msg_return;
 }
 ?>

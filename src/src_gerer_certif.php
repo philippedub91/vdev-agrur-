@@ -22,29 +22,29 @@ if(isset($_POST['txt_libelle_certif']))
 		}
 		catch(Exception $e)
 		{
-			echo('Erreur : '.$e->getMessage());
+			$erreur = 'La certification n\'a pas été modifiée : '.$e->getMessage();
 		}
 
 		$sql->closeCursor(); //Ferme l'objet PDO
 	}
 	else //Si tous les champs ne sont pas saisis.
 	{
-		$erreur = 'e6';
+		$erreur = 'WOOOAH twee-vwoop VRrrUHD DEda dah - Erreur interne à l\'application';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le libellé de la certification n\'est pas renseigné.';
 }
 
 
 //Redirection vers la page de gestion des variétés
 if(isset($erreur)) //S'il y a une erreur renvoi vers la page certification avec le code erreur.
 {
-	header('location: ../interface/gerer_certif.php?msg='.$erreur.'&certif='.$_POST['hd_certif']);
+	header('location: ../interface/gerer_certif.php?err='.$erreur.'&certif='.$_POST['hd_certif']);
 }
 else //Il n'y a pas d'erreur
 {
-	header('location: ../interface/certifications.php?msg=s1');	
+	header('location: ../interface/certifications.php?msg=Certification ajoutée');	
 }
 

@@ -48,47 +48,47 @@ if(isset($_POST['lst_calibre']))
 						}
 						catch(Exception $e)
 						{
-							echo('Erreur : '.$e->getMessage());
+							$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
 						}
 					}
 					catch(Exception $e)
 					{
-						echo('Erreur : '.$e->getMessage());
+						$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
 					}
 				}
 				catch(Exception $e)
 				{
-					echo('Erreur : '.$e->getMessage());
+					$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
 				}
 			}
 			else
 			{
-				$erreur = 'e6';
+				$erreur = 'Le type de produit ne semble pas renseigné';
 			}
 		}
 		else
 		{
-			$erreur = 'e6';
+			$erreur = 'DrruurRRP tanaNDuh! - Erreur interne à l\'application';
 		}
 	}
 	else //Si tous les champs ne sont pas saisis.
 	{
-		$erreur = 'e1';
+		$erreur = 'La quantité ne semble pas renseignée.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le calibre ne semble pas renseigné.';
 }
 
 
 //Redirection vers la page de gestion des variétés
 if(isset($erreur)) //S'il y a une erreur renvoi vers la page certification avec le code erreur.
 {
-	header('location: ../interface/creer_lot_gestionnaire.php?livraison='.$_POST['hd_livraison'].'&msg='.$erreur);
+	header('location: ../interface/creer_lot_gestionnaire.php?livraison='.$_POST['hd_livraison'].'&err='.$erreur);
 }
 else //Il n'y a pas d'erreur
 {
-	header('location: ../interface/creer_lot_gestionnaire.php?msg=s1');	
+	header('location: ../interface/creer_lot_gestionnaire.php?msg=Lot créé avec succès !');	
 }
 

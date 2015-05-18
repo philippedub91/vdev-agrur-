@@ -27,26 +27,30 @@ if(isset($_POST['txt_nom_verger']) && !empty($_POST['txt_nom_verger']))
 			}
 			catch(Exception $e)
 			{
-				echo('Erreur : '.$e->getMessage());
+				$erreur = 'Les modifications n\'ont pas pu être enregistrées : '.$e->getMessage();
 			}
 		}
 		else
 		{
-			$erreur = 'e9';
+			$erreur = 'Le nombre d\'arbres ne semble pas renseigné.';
 		}
 	}
 	else
 	{
-		$erreur = 'e1';
+		$erreur = 'La superficie ne semble pas correctement renseignée.';
 	}
 }
 else
 {
-	$erreur = 'e1';
+	$erreur = 'Le nom du verger ne semble pas renseigné.';
 }
 
 
 if(isset($erreur))
 {
-	header('location: ../interface/gerer_verger.php?verger='.$_POST['id_verger'].'&msg='.$erreur);
+	header('location: ../interface/gerer_verger.php?verger='.$_POST['id_verger'].'&err='.$erreur);
+}
+else
+{
+	header('location: ../interface/gerer_verger.php?verger:='.$_POST['id_verger'].'&msg=Modifications enregistrées !');
 }

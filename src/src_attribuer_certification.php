@@ -32,7 +32,7 @@ if(isset($_POST['hd_prod']))
 					}
 					catch(Exception $e)
 					{
-						echo('Erreur : '.$e->getMessage());
+						$erreur = 'La certification n\'a pas pu être attribuée : '.$e->getMessage();
 					}
 				}
 			}
@@ -40,12 +40,12 @@ if(isset($_POST['hd_prod']))
 	}
 	catch(Exception $e)
 	{
-		echo('Erreur : '.$e->getMessage());
+		$erreur = 'La certification n\'a pas pu être attribuée : '.$e->getMessage();
 	}
 }
 else
 {
-	$erreur = 'e6';
+	$erreur = 'BeeYoop BeeDeepBoom Weeop DEEpaEEya - Erreur interne à l\'application';
 }
 
 
@@ -55,11 +55,9 @@ else
 //Redirige l'utilisateur vers la page de gestion du producteur
 if(isset($erreur)) //Une erreur a été rencontrée
 {
-	header('location: ../interface/gerer_producteur.php?msg='.$erreur.'&prod='.$_POST['hd_prod']);
+	header('location: ../interface/gerer_producteur.php?err='.$erreur.'&prod='.$_POST['hd_prod']);
 }
 else //Il n'y a pas d'erreurs
 {
-	header('location: ../interface/gerer_producteur.php?prod='.$_POST['hd_prod'].'&msg=s1');
+	header('location: ../interface/gerer_producteur.php?prod='.$_POST['hd_prod'].'&msg=Certification attribuée avec succès !');
 }
-
-//header('location: ../interface/ajout_verger.php?msg='.$erreur); 

@@ -13,6 +13,18 @@ if(!isset($_GET['certif']))
   //Redirige vers la page des certifications
   header('location: certifications.php');
 }
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
+}
 ?>
 
 
@@ -22,16 +34,6 @@ if(!isset($_GET['certif']))
   <title>Certifications</title>
   <?php include('../common/head.php'); ?>
   <?php include('../src/bdd_connect.php'); ?>
-
-  <?php
-  //Gestion des messages de succès et d'erreur
-  $message = '';
-
-  if(isset($_GET['msg']))
-  {
-    $message = affiMessage($_GET['msg']);
-  }
-  ?>
 </head>
 
 <body>
@@ -53,7 +55,9 @@ if(!isset($_GET['certif']))
       </p>
 
       <!--Affichage d'un message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
 
       <ul data-role="listview">

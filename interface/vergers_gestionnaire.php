@@ -9,11 +9,18 @@ include('../src/fonctions_traitement.php');
 
 sessionVerif('GEST'); //Vérifie les autorisations de l'utilisateur
 
-//Gestion des messages d'erreur et de succès
-$message = '';
-if(isset($_GET['msg']))
+############
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
 {
-  $message = affiMessage($_GET['msg']);
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); 
 }
 ?>
 
@@ -51,7 +58,9 @@ if(isset($_GET['msg']))
       </p>
 
       <!--Affichage des messages de succès ou d'erreur-->
+      <?php echo($erreur); ?>
       <?php echo($message); ?>
+      <!--Fin messages-->
 
       <!--Affiche la liste des vergers du producteur-->
       <ul data-role="listview" data-filter="true" data-filter-placeholder="Chercher un verger" data-inset="true">

@@ -3,37 +3,24 @@ session_start();
 
 //Importe le fichier de fonctions
 include('../src/fonctions_traitement.php');
+
+//Gestion des messages de succès et d'erreur
+$erreur = ''; //Contiendra éventuellement le message d'erreur
+$message = ''; //Contiendra éventuellement le message de succès
+if(isset($_GET['err']))
+{
+  $erreur = addDecorum($_GET['err'], 'ERR');
+}
+elseif(isset($_GET['msg']))
+{
+  $message = addDecorum($_GET['msg'], 'SUC'); //
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <?php include('../common/head.php'); ?>
-  
-  <?php
-  $alert = ''; //Contient un message d'erreur si celui-ci existe, sinon vide.
-  //Sélection du message d'erreur en fonction de la variable d'adresse.
-  if(isset($_GET['msg']))
-  {
-    switch($_GET['msg'])
-    {
-      case 1:
-        $alert = 'L\'utilisateur correspondant aux identifiants saisis n\'existe pas. Veuillez réessayer.';
-      break;
-      case 2:
-        $alert = 'Votre compte existe bien, mais ne semble pas activé. Contactez l\'administrateur.';
-      break;
-      case 3:
-        $alert = 'Vous devez saisir votre mot de passe pour vous connecter.';
-      break;
-      case 4:
-        $alert = 'Vous devez saisir votre adresse mail pour vous connecter.';
-      break;
-      default;
-      break;
-    }
-  }
-  ?>
+  <?php include('../common/head.php'); ?> 
 </head>
 
 <body>
@@ -58,8 +45,9 @@ include('../src/fonctions_traitement.php');
         mot de passe.
       </p>
 
-      <span style="color:red; font-weight:bold;"><?php echo($alert); ?></span>
-
+      <!--Affichage du message de succès ou d'erreur-->
+      <?php echo($erreur); ?>
+      <?php echo($message); ?>
 
       <form method="POST" action="../src/src_index.php" data-ajax="false">
         <table>

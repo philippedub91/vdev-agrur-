@@ -12,8 +12,19 @@ if(isset($_GET['condi']))
 	}
 	catch(Exception $e)
 	{
-		echo($e->getMessage());
+		$erreur = 'Suppression impossible : '.$e->getMessage();
 	}
 }
 
-header('location: ../conditionnements.php');
+
+//Redirection de l'utilisateur
+if(isset($erreur)
+{
+	//Une erreur a été rencontrée, on affiche un message d'erreur
+	header('location: ../conditionnements.php?err='.$erreur);
+}
+else
+{
+	header('location: ../conditionnements.php?msg=Conditionnent supprimé avec succès');
+}
+?>
