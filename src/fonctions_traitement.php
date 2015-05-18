@@ -1391,7 +1391,7 @@ function sessionVerif($autorisation)
 				if($_SESSION['type'] != $autorisation)
 				{
 					//echo('Vous êtes : '.$_SESSION['type'].' cette page est réservée aux : '.$autorisation);
-					header('location: espace_gestionnaire.php');
+					header('location: espace_producteur.php');
 				}
 			break;
 			case 'CLI':
