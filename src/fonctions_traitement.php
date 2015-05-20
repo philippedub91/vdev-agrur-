@@ -100,6 +100,40 @@ function afficherVergerProducteurLst($num_prod)
     $sql->closeCursor();
 }
 
+/**
+ * Fonction qui donne le libelle d'un type de noix dont l'identifiant est 
+ * donné en paramètre.
+ *
+ *
+ * @param int $id_type_produit : Identifiant du type produit dans la base de données
+ * 
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $libelle_type_produit
+ */ 
+function getLibelleTypeProduit($id_type_produit)
+{
+	global $connexion;
+
+	$libelle_type_produit = NULL;
+
+	$sql = $connexion->prepare('SELECT libelle_type_produit FROM type_produit WHERE id_type_produit = :id_type_produit');
+	$sql->bindParam(':id_type_produit', $id_type_produit);
+	try
+	{
+		$sql->execute();
+		$donnees_type_produit = $sql->fetch();
+		$libelle_type_produit = $donnees_type_produit['libelle_type_produit'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return  $libelle_type_produit;
+}
+
+
 /** 
  * Fonction qui permet d'afficher la liste des types de produits
  *
@@ -1132,7 +1166,7 @@ function getTypeNoixLot($id_lot)
 
 	$libelle_type = NULL;
 
-	$sql = $connexion->prepare('SELECT libelle_type_produit FROM lot_production LP, livraison L, type_produit TP WHERE LP.id_lot = :id_lot AND LP.id_livraison = L.id_livraison AND TP.id_type_produit = L.type');
+	$sql = $connexion->prepare('SELECT libelle_type_produit FROM lot_production LP, livraison L, type_produit TP WHERE LP.id_lot = :id_lot AND LP.id_livraison = L.id_livraison AND TP.id_type_produit = L.type_produit');
 	$sql->bindParam(':id_lot', $id_lot);
 	try
 	{
@@ -1146,6 +1180,37 @@ function getTypeNoixLot($id_lot)
 	}
 
 	return $libelle_type; 
+}
+
+/**
+ * Fonction qui retourne le libelle d'une variété étant comprise dans 
+ * une livraison.
+ *
+ * @param int $id_livraison : Identifiant de la livraison dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return string $libelle_variete : Libelle de la variété
+ *
+ **/
+function getLibelleVarieteLivraison($id_livraison)
+{
+	global $connexion;
+
+	$sql = $connexion->prepare('SELECT id_variete FROM livraison WHERE id_livraison = :id_livraison');
+	$sql->bindParam(':id_livraison', $id_livraison);
+	try
+	{
+		$sql->execute();
+		$donnees_variete = $sql->fetch();
+		$libelle_variete = getLibelleVariete($donnees_variete['id_variete']); 
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $libelle_variete;
 }
 
 /**

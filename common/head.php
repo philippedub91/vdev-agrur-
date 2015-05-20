@@ -10,19 +10,7 @@
 <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />-->
 <link rel="stylesheet" href="../style/jquery.mobile.css" />
 
-
-<!--Javascript / Jquery-->
-<!--
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-<script src="../js/script.js"></script>
--->
-
 <!--Javascript / Jquery hors-ligne-->
 <script src="../js/jquery.min.js"></script>
 <script src="../js/jquery.mobile.js"></script>
-<script src="../js/script.js"></script>
 <script src="../js/jquery.mobile.datepicker.js"></script>
-
-<!--Fonctions php-->
-<?php //include('../src/fonctions_affichage.php'); ?>

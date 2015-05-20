@@ -56,7 +56,8 @@ elseif(isset($_GET['msg']))
       <!--Fin messages-->
 
     	<?php
-    	$sql = $connexion->query('SELECT * FROM  lot_production');
+    	//Sélectionne tous les lots dont le poids est supérieur à zéro
+    	$sql = $connexion->query('SELECT * FROM  lot_production WHERE poids NOT LIKE 0.00');
     	try
     	{
     		$sql->execute();
@@ -79,11 +80,11 @@ elseif(isset($_GET['msg']))
     						</tr>
     						<tr>
     							<td><b>Variété :</b></td>
-    							<td><?php echo(getLibelleVarieteLot($donnees_lot['id_lot'])); ?></td>
+    							<td><?php echo(getLibelleVarieteLivraison($donnees_lot['id_lot'])); ?></td>
     						</tr>
     						<tr>
     							<td><b>Type :</b></td>
-    							<td><?php echo(getTypeNoixLot($donnees_lot['id_lot'])); ?></td>
+    							<td><?php echo(getLibelleTypeProduit($donnees_lot['type_produit'])); ?></td>
     						</tr>
     					</table>
     					<a href="commander.php?lot=<?php echo($donnees_lot['id_lot']); ?>" class="ui-btn ui-shadow">Commander ce lot</a>

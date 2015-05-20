@@ -22,17 +22,17 @@ if(isset($_POST['txt_conditionnement']) && !empty($_POST['txt_conditionnement'])
 		}
 		catch(Exception $e)
 		{
-			$erreur = 'L\'opération à échouée : '.$e->getMessage());
+			$erreur = 'L\'opération à échouée : '.$e->getMessage();
 		}
 	}
 	else
 	{
-		$erreur = 'Le poids n\'est pas correctement renseigné');
+		$erreur = 'Le poids n\'est pas correctement renseigné';
 	}
 }
 else
 {
-	$erreur = 'Le libellé du conditionnement ne semble pas renseigné')
+	$erreur = 'Le libellé du conditionnement ne semble pas renseigné';
 }
 
 

@@ -86,7 +86,7 @@ if(!isset($_GET['condi']))
           <h3 class="ui-title">Voulez-vous vraiment supprimer ce conditionnement ?</h3>
           <p>Cette opération ne pourra pas être annulée !</p>
           <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">Annuler</a>
-          <a href="../src/src_supprimer_condi.php?condi=<?php echo($_GET['condi']); ?>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-transition="flow">Supprimer</a>
+          <a href="../src/src_supprimer_conditionnement.php?condi=<?php echo($_GET['condi']); ?>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-transition="flow">Supprimer</a>
         </div>
       </div>
       <!--Fin fenêtre-->
