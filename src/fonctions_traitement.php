@@ -35,6 +35,71 @@ function afficherVerger()
 
 
 /**
+ * Fonction qui permet d'obtenir l'id d'une variété à partir du verger
+ * 
+ * @param int $id_verger : Identifiant du verger
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return int $id_variete;
+ *
+ */
+function getIdVarieteVerger($id_verger)
+{
+	global $connexion;
+
+	$id_variete = NULL;
+
+	$sql = $connexion->prepare('SELECT id_variete FROM verger WHERE id_verger = :id_verger');
+	$sql->bindParam(':id_verger', $id_verger);
+	try
+	{
+		$sql->execute();
+		$donnees_variete = $sql->fetch();
+		$id_variete = $donnees_variete['id_variete'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $id_variete;
+}
+
+/**
+ * Fonction qui retourne l'identifiant du calibre correspondant à un lot dont
+ * l'identifiant est donné en paramètre/
+ *
+ * @param int $id_lot : Identifiant du lot dans la base de données
+ *
+ * @global pdo $connexion : Objet PDO de connexion à la base de données
+ *
+ * @return int id_calibre : Identifiant du calibre dans la base de données
+ *
+ */
+function getIdCalibreLot($id_lot)
+{
+	global $connexion;
+
+	$id_calibre = NULL;
+
+	$sql = $connexion->prepare('SELECT calibre FROM lot_production WHERE id_lot = :id_lot');
+	$sql->bindParam(':id_lot', $id_lot);
+	try
+	{
+		$sql->execute();
+		$donnees_lot = $sql->fetch();
+		$id_calibre = $donnees_lot['calibre'];
+	}
+	catch(Exception $e)
+	{
+		echo('Erreur : '.$e->getMessage());
+	}
+
+	return $id_calibre;
+}
+
+/**
  * Fonction qui affiche tous les vergers d'un producteur sous forme de liste
  *
  * @param int $id_producteur : Identifiant du producteur dans la base de données
@@ -284,6 +349,8 @@ function getIdentiteProducteur($num_prod)
 {
 	$identite_producteur = NULL;
 
+	//echo('num_prod : ' . $num_prod);
+
 	try
 	{
 		$identite_producteur = getPrenomProducteur($num_prod).' '.getNomProducteur($num_prod); 
@@ -292,7 +359,7 @@ function getIdentiteProducteur($num_prod)
 	{
 		echo('Erreur : '.$e->getMessage());
 	}
-	
+
 	return $identite_producteur;
 }
 
@@ -480,6 +547,7 @@ function getPrenomProducteur($num_prod)
 	{
 		$sql->execute();
 		$donnees_utilisateur = $sql->fetch();
+		
 		$prenom_producteur = $donnees_utilisateur['prenom'];
 	}
 	catch(Exception $e)

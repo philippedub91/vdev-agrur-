@@ -110,7 +110,7 @@ else
 		<th style="text-align:center; width:300px;">Quantité</th>
 	</tr>
 	<?php
-	$sql = $connexion->prepare('SELECT * FROM lot_production WHERE id_livraison = :id_livraison');
+	$sql = $connexion->prepare('SELECT * FROM composer WHERE id_livraison = :id_livraison');
 	$sql->bindParam(':id_livraison', $donnees_livraison['id_livraison']);
 	try
 	{
@@ -120,8 +120,8 @@ else
 		?>
 			<tr>
 				<td style="text-align=center;"><?php echo($donnees_lot['id_lot']); ?></td>
-				<td style="text-align=center;"><?php echo(getLibelleCalibre($donnees_lot['calibre'])); ?></td>
-				<td style="text-align=center;"><?php echo($donnees_lot['poids']); ?> Kg</td>
+				<td style="text-align=center;"><?php echo(getIdCalibreLot(getLibelleCalibre($donnees_lot['id_lot']))); ?></td>
+				<td style="text-align=center;"><?php echo(getPoidsLot($donnees_lot['id_lot'])); ?> Kg</td>
 			</tr>
 		<?php
 		}

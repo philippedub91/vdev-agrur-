@@ -58,7 +58,7 @@ elseif(isset($_GET['msg']))
       <ul data-role="listview" data-inset="true" data-theme="c" data-divider-theme="c" data-count-theme="c">
         <li data-role="list-divider">Livraisons</li>
         <?php
-        $sql = $connexion->query('SELECT * FROM livraison WHERE traite = 0');
+        $sql = $connexion->query('SELECT * FROM livraison');
         $sql->bindParam(':num_prod', $_SESSION['num_prod']);
         try
         {

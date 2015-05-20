@@ -29,7 +29,7 @@ elseif(isset($_GET['msg']))
 
   <!--Eléments nécessaires à l'affichage du calendrier
   lors de la sélection du champ date-->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"-->
   <script src="../js/jquery-ui.js"></script>
   <script>
     $(function() {
@@ -49,6 +49,7 @@ elseif(isset($_GET['msg']))
 
   <div data-role="header">
     <a href="#" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
+    <a href="espace_producteur.php" data-icon="home" data-iconpos="notext" data-shadow="true" data-iconshadow="true" data-transition="slidefade" class="ui-icon"></a>
     <h1>Mes livraisons</h1>
   </div>
 

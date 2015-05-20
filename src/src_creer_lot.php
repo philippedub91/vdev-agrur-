@@ -48,17 +48,17 @@ if(isset($_POST['lst_calibre']))
 						}
 						catch(Exception $e)
 						{
-							$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
+							$erreur = 'Le lot n\'a pas pu être créé retire : '.$e->getMessage();
 						}
 					}
 					catch(Exception $e)
 					{
-						$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
+						$erreur = 'Le lot n\'a pas pu être créé lien : '.$e->getMessage();
 					}
 				}
 				catch(Exception $e)
 				{
-					$erreur = 'Le lot n\'a pas pu être créé : '.$e->getMessage();
+					$erreur = 'Le lot n\'a pas pu être créé max : '.$e->getMessage();
 				}
 			}
 			else

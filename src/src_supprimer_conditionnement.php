@@ -18,13 +18,13 @@ if(isset($_GET['condi']))
 
 
 //Redirection de l'utilisateur
-if(isset($erreur)
+if(isset($erreur))
 {
 	//Une erreur a été rencontrée, on affiche un message d'erreur
-	header('location: ../conditionnements.php?err='.$erreur);
+	header('location: ../interface/conditionnements.php?err='.$erreur);
 }
 else
 {
-	header('location: ../conditionnements.php?msg=Conditionnent supprimé avec succès');
+	header('location: ../interface/conditionnements.php?msg=Conditionnent supprimé avec succès');
 }
 ?>
